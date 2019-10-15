@@ -1,0 +1,23 @@
+{
+  "id": "1401443",
+  "name": "vant",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "5053482",
+      "name": "筛选",
+      "font_class": "shaixuan",
+      "unicode": "e602",
+      "unicode_decimal": 58882
+    },
+    {
+      "icon_id": "8367143",
+      "name": "星星",
+      "font_class": "xingxing",
+      "unicode": "e610",
+      "unicode_decimal": 58896
+    }
+  ]
+}
