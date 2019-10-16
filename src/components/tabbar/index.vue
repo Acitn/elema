@@ -3,8 +3,7 @@
     <header class="header">
       <van-search placeholder="搜索商家、商品名称" v-model="value"/>
     </header>
-    <div>
-      <div class="center-circle">
+    <div class="center-circle">
       <div class="youhui">
         <div style="display: inline-block;font-size:24px;">200</div>
         <div style="display: inline-block;font-size:10px;color: #F2A8A1;">元</div>
@@ -13,8 +12,7 @@
       <div class="youhui3">满2000元可使用</div>
       <div class="youhui4">立即领取</div>
       <div class="center-circle2"></div>     
-      </div>  
-    </div>
+    </div>  
     <nav>
       <van-swipe :autoplay="3000" indicator-color="white">
         <van-swipe-item  v-for="(item,index) in newsList" :key="index">
@@ -32,7 +30,7 @@
         />
       </van-grid>
 
-    <section >
+    <section>
       <div style="font-size:24px;padding-left:15px;text-align:left;font-weight:blod;">推荐商家</div>
       <div class="dropMenu">
         <div class="menuItem">
@@ -43,10 +41,7 @@
           <div class="menuText">销量</div>
         </div>
         <div class="menuItem">
-          <div class="menuText">
-            筛选
-            <i class="iconfont icon-shaixuan"></i>
-          </div>
+          <pullDown :title="title" :dataList="option2" :itemTitle="title2"></pullDown>
         </div>
       </div>
       <shopList :shopValue="shop"></shopList>
@@ -54,11 +49,11 @@
   </div>
 </template>
 <script>
-// import shopList from '../shop/shopList'
+import pullDown from '../shop/pullDown'
 export default {
-  // components:{
-  //   shopList
-  // },
+  components:{
+    pullDown
+  },
   data(){
     return {
       value:'',
@@ -76,6 +71,12 @@ export default {
           { text: '人均从高到低', value: 6 },
           { text: '通用排序', value: 7 },
         ],
+      title:"筛选",
+      title2:["优惠活动","商家服务"],
+      option2: [
+        {"value":['首单立减','津贴联盟','门客新客立减','满减优惠','下单返红包','进店领红包','配送费优惠','赠品优惠','特价商品','品质联盟红包']},
+        {"value":['蜂鸟专送','到店自取','品牌商家','新店','接收预定','食安保','开发票']} 
+      ],
       newsList:[],
       gridText:[{name:'美食'},{name:'晚餐'},{name:'卖场便利'},{name:'水果'},{name:'买菜'},{name:'甜品饮品'}]
     }
@@ -152,7 +153,7 @@ a {
 }
 .container{
   .center-circle {
-    margin: 10px;
+    margin: 15px;
     height: 15vh; 
     margin-top: 10px;
     position: relative;
@@ -196,7 +197,11 @@ a {
         color: #F2A8A1;
       }    
   } 
+  .van-swipe{
+    margin: 0 15px;
+  }
   .dropMenu{
+    // position: relative;
     display:flex;
     justify-content: space-around;
     .menuItem{

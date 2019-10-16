@@ -49,4 +49,7 @@ a{
 footer{
   padding-top: 50px;
 }
+img{ 
+  pointer-events: none; //阻止点击预览图片
+}
 </style>
