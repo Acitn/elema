@@ -1,24 +1,26 @@
 <template>
     <div class="content">
-        <div class="menuText">
+        <div class="menuText" @click="showMenu" ref="refName">
             {{title}}
             <i class="iconfont icon-shaixuan"></i>
         </div>
-        <div class="Downmenu">
-            <div class="downItem"  v-for="(itemTitle,id) in itemTitle" :key="id">
-                <div class="downTitle">{{itemTitle}}</div>
-                <div class="downText">
-                    <div class="item" v-for="(item,i) in dataList[id].value" :key="i">
-                        <div >{{item}}</div>
-                    </div> 
+        <transition name="menu">
+            <div class="Downmenu" v-if="show">
+                <div class="downItem"  v-for="(itemTitle,id) in itemTitle" :key="id">
+                    <div class="downTitle">{{itemTitle}}</div>
+                    <div class="downText">
+                        <div class="item" v-for="(item,i) in dataList[id].value" :key="i">
+                            <div >{{item}}</div>
+                        </div> 
+                    </div>
+                </div>
+                <div class="menuBtn">
+                    <div class="clear">清空</div>
+                    <div class="confirm">查看510个商家</div>
                 </div>
             </div>
-            <div class="menuBtn">
-                <div class="clear">清空</div>
-                <div class="confirm">查看510个商家</div>
-            </div>
-        </div>
-        <div class="shade"></div>
+        </transition>
+        <div class="shade" @click="close" v-show="show"></div>
     </div>
 </template>
 
@@ -42,9 +44,29 @@
     },
     data(){
       return{
-        
+        show:false,
+        show2:"opacity:0;height:0;"
       }     
     },
+    // mounted () {
+    //     this.$refs.refName.addEventListener('scroll', this.judgeScroll,true);
+    // },
+    methods:{
+        close(){
+            this.show = false;
+            this.show2 = "opacity:0;height:0;";
+        },
+        showMenu(){
+            // document.getElementById("idName").scrollIntoView();
+            // //或者
+            // document.querySelector("#idName").scrollIntoView();
+            //或者
+            this.$refs.refName.scrollIntoView();
+            this.$refs.refName.scrollTop = 50;
+            this.show2 = "opacity:1;height:auto;";
+            this.show = true;
+        }
+    }
   }
 </script>
 <style lang="scss" scoped>
@@ -55,14 +77,14 @@
         line-height:50px;
         padding:0 10px;
         font-size: 15px;
+        animation-duration: 0.2s;
     }
     .Downmenu{
         position: absolute;
         z-index: 2015;
         font-size: 12px;
         width: 100%;
-        animation-duration:.2s;
-        top: 50px;
+        top: 82px;
         left: 0;
         background-color: #fff;
         .downItem{
@@ -124,12 +146,19 @@
     }
     .shade{
         position: absolute;
-        top: 0;
+        top: 83px;
         left: 0;
         z-index: 2003;
         width: 100%;
         height: 100%;
         background-color: rgba(0,0,0,.7);
+    }
+    .menu-enter-active, .menu-leave-active {
+        transition: all .2s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+    }
+    .menu-enter,.menu-leave-to{
+        transform: translateY(-490px);
+        opacity: 1;
     }
 }
     

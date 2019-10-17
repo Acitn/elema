@@ -30,7 +30,7 @@
         />
       </van-grid>
 
-    <section>
+    <section style="position: relative;">
       <div style="font-size:24px;padding-left:15px;text-align:left;font-weight:blod;">推荐商家</div>
       <div class="dropMenu">
         <div class="menuItem">
@@ -151,11 +151,18 @@ a {
   padding:0 10px;
   font-size: 15px;
 }
+.header{
+  position: fixed;
+  width: 100%;
+  top: 0;
+  height: 55px;;
+  z-index: 9999;
+}
 .container{
   .center-circle {
     margin: 15px;
     height: 15vh; 
-    margin-top: 10px;
+    margin-top: 55px;
     position: relative;
     background:
     radial-gradient(circle at right top, transparent 10px, #E93F2C 0) top left / 25% 51% no-repeat,
