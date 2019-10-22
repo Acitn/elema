@@ -1,18 +1,18 @@
 <template>
   <div id="app">
     <router-view></router-view>
-	<footer>
-		<van-tabbar v-model="active">
-			<van-tabbar-item icon="home-o">
-				<router-link to="/home">Home</router-link>
-			</van-tabbar-item>
-			<van-tabbar-item icon="search">
-				<router-link to="/about">About</router-link>
-			 </van-tabbar-item>
-			<van-tabbar-item icon="friends-o"><router-link to="/about">用户</router-link></van-tabbar-item>
-			<van-tabbar-item icon="setting-o"><router-link to="/about">设置</router-link></van-tabbar-item>
-		</van-tabbar>
-	</footer>
+    <footer v-show="$store.state.showBottomNav">
+      <van-tabbar v-model="active">
+        <van-tabbar-item icon="home-o">
+          <router-link to="/home">外卖</router-link>
+        </van-tabbar-item>
+        <van-tabbar-item icon="search">
+          <router-link to="/about">超市</router-link>
+        </van-tabbar-item>
+        <van-tabbar-item icon="setting-o"><router-link to="/order">订单</router-link></van-tabbar-item>
+        <van-tabbar-item icon="friends-o"><router-link to="/personal">我的</router-link></van-tabbar-item>
+      </van-tabbar>
+    </footer>
   </div>
 </template>
 <script>
@@ -33,16 +33,9 @@
   text-align: center;
   color: #2c3e50;
 }
-// #nav {
-//   padding: 30px;
-//   a {
-//     font-weight: bold;
-//     color: #2c3e50;
-//     &.router-link-exact-active {
-//       color: #42b983;
-//     }
-//   }
-// }
+body{
+  background-color: #f5f5f5;
+}
 a{
   color: #7d7e80;
 }

@@ -1,18 +1,27 @@
 <template>
   <div class="container">
-    <header class="header">
-      <van-search placeholder="搜索商家、商品名称" v-model="value"/>
-    </header>
-    <div class="center-circle">
-      <div class="youhui">
-        <div style="display: inline-block;font-size:24px;">200</div>
-        <div style="display: inline-block;font-size:10px;color: #F2A8A1;">元</div>
+    <header>
+      <div class="header">
+        <div class="addressBox">
+          <i class="iconfont icon-didian"></i>
+          <span class="address">广东省茂名市茂南</span>
+          <i class="iconfont icon-arrow-left" style="color:#A2A2A2;font-size:.18rem"></i>
+        </div>
+        
+        <div class="rightBox">
+          <div class="scan">
+            <i class="iconfont icon-saoma"></i>
+            <span>扫码</span>
+          </div>
+          <div class="weather">
+            <i class="iconfont icon-taiyang"></i>
+            <span>27℃</span>
+          </div>
+        </div>
       </div>
-      <div class="youhui2">优惠券</div>
-      <div class="youhui3">满2000元可使用</div>
-      <div class="youhui4">立即领取</div>
-      <div class="center-circle2"></div>     
-    </div>  
+      <van-search :class="{headerFixed:!header}" placeholder="搜索商家、商品名称" v-model="value"/>
+    </header>
+
     <nav>
       <van-swipe :autoplay="3000" indicator-color="white">
         <van-swipe-item  v-for="(item,index) in newsList" :key="index">
@@ -31,7 +40,7 @@
       </van-grid>
 
     <section style="position: relative;">
-      <div style="font-size:24px;padding-left:15px;text-align:left;font-weight:blod;">推荐商家</div>
+      <div style="font-size:24px;padding-left:15px;text-align:left;font-weight:blod;      background: #fff;">推荐商家</div>
       <div class="dropMenu">
         <div class="menuItem">
           <van-dropdown-menu style="padding:0 10px">
@@ -44,7 +53,7 @@
           <pullDown :title="title" :dataList="option2" :itemTitle="title2"></pullDown>
         </div>
       </div>
-      <shopList :shopValue="shop"></shopList>
+      <shopList :shopValue="shop" :load="!query"></shopList>
     </section>
   </div>
 </template>
@@ -57,7 +66,9 @@ export default {
   data(){
     return {
       value:'',
+      header:true,
       value1:0,
+      query:true,
       switch1: false,
       switch2: false,
       shop:[],
@@ -84,15 +95,35 @@ export default {
   created(){
     this.getNewsList();
     this.getShopList();
+    this.$store.state.showBottomNav = true
+  },
+  mounted () {
+    // 添加滚动事件，检测滚动到页面底部
+    window.addEventListener('scroll', this.loadMore)
+    // 添加滚动事件，检测滚动到页面底部
+    window.addEventListener('scroll', this.fixed)
   },
   methods:{
     onConfirm() {
       this.$refs.item.toggle();
     },
+    fixed(){
+      if(document.body.scrollTop>= 60){
+        this.header = false;
+      }else if(document.body.scrollTop <= 60){
+        this.header = true;
+      }
+    },
+    loadMore(){
+      if (((window.screen.height + document.body.scrollTop) > (document.body.clientHeight - 100)) && this.query) {
+        this.query = false;
+        this.getShopList();
+      }
+    },
     getNewsList(){
       this.$http.post("https://www.fastmock.site/mock/4888b53ba159c454e964bfb891bf22a2/elma/newsList").then(result => {
         if(result.status === 200){
-          this.newsList = result.body.data;
+          this.newsList = result.body.data; 
         }else{
           console.log("轮播图获取失败")
         }
@@ -112,7 +143,13 @@ export default {
                 value.distance = `${value.distance}m`
               }
           }
-          this.shop = shop;
+          
+          for(let item of shop){
+             this.shop.push(item);
+          }
+         
+          this.query = true;
+          // this.shop = shop;
         }
       })
     }
@@ -151,64 +188,58 @@ a {
   padding:0 10px;
   font-size: 15px;
 }
-.header{
+.headerFixed{
   position: fixed;
   width: 100%;
   top: 0;
   height: 55px;;
   z-index: 9999;
 }
-.container{
-  .center-circle {
-    margin: 15px;
-    height: 15vh; 
-    margin-top: 55px;
-    position: relative;
-    background:
-    radial-gradient(circle at right top, transparent 10px, #E93F2C 0) top left / 25% 51% no-repeat,
-    radial-gradient(circle at right bottom, transparent 10px, #E93F2C 0) bottom left /25% 51% no-repeat,
-    radial-gradient(circle at left top, transparent 10px, #E93F2C 0) top right /75% 51% no-repeat,
-    radial-gradient(circle at left bottom, transparent 10px, #E93F2C 0) bottom right /75% 51% no-repeat;
-    .youhui{
-      position: absolute;
-      top:-32px;
-      left:5px;
-      width: 60px;       
+.header{
+  display: flex;
+  justify-content: space-between;
+  height:60px;
+  padding:  15px;
+  box-sizing: border-box;
+  .addressBox{
+    font-size: .2rem;
+    width: 2.1rem;
+    display: flex;
+    align-items: center;
+    .address{
+      font-weight: bold;
+      overflow:hidden;
+      text-overflow:clip;
+      white-space:nowrap; 
+      padding-right: 5px;
+      border-right: 2px solid #DBDBDB;
     }
-    .youhui2{
-      position: absolute;
-      top:30px;
-      left:40px;
-      width: 200px;
-      font-size: 18px;
-      }
-      .youhui3{
-        position: absolute;
-        top:55px;
-        left:40px;
-        width: 200px;
-        font-size: 10px;
-        color: #F2A8A1;
-      }
-      .youhui4{
-        position: absolute;
-        top:30px;
-        right:10px;
-        width: 90px;
-        height: 30px;
-        line-height: 30px;
-        font-size: 16px;
-        border: 1px solid #fff;
-        border-radius: 15px;
-        text-align: center;
-        color: #F2A8A1;
-      }    
-  } 
+    .iconfont{
+      font-size: .22rem;
+      color: #07A9FF;
+    }
+  }
+  .rightBox{
+    font-size: .16rem;
+    display: flex;
+    align-items: center;
+    color: #07A9FF;
+    .iconfont{
+      font-size: .22rem;
+      margin-right: .02rem
+    }
+    .weather{
+      margin-left: .08rem
+    }
+  }
+}
+.container{
+  background-color: #fff;
   .van-swipe{
     margin: 0 15px;
+    padding-top: 10px;
   }
   .dropMenu{
-    // position: relative;
     display:flex;
     justify-content: space-around;
     .menuItem{

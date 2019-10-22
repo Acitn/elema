@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <div class="shopItem" v-for="(item,i) in shopValue" :key="i">
+  <div> 
+    <router-link class="shopItem" :to=item.url  v-for="(item,i) in shopValue" :key="i">
       <img :src="item.img_url" alt="">
       <div class="content">
         <div class="title">{{item.name}}</div>
@@ -32,6 +32,12 @@
           <div class="tag" v-for="(tag,id) in item.tag" :key="id">{{tag}}</div>
         </div>
       </div>
+    </router-link >
+    <div v-if="load" class="load">
+      <div class="circle">   
+        <div class="box"></div>
+      </div>
+      <span>加载中</span> 
     </div>
   </div>
 </template>
@@ -43,6 +49,10 @@
       shopValue:{
         type:Array,
         required:true //  设置为必填
+      },
+      load:{
+        type:Boolean,
+        required:true
       }
     },
     data(){
@@ -71,6 +81,7 @@
     padding: .1rem;
     padding-right: .058rem;
     font-size: 16px;
+    background: #fff;
     img{
       width: .8rem;
       height: .8rem;
@@ -138,6 +149,40 @@
       }
     }
   }
+  .load{
+    height: 30px;
+    position: relative;
+    font-size: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .circle{
+      width: 30px;
+      height: 20px;
+      .box {
+        position: absolute;
+        border-radius: 50%;
+        border-style: solid;
+        animation: ship 1.5s linear infinite;
+      }
+      .box:nth-child(1) {
+        width: 20px;
+        height: 20px;
+        color: #C1C1C1;
+        border-width: 0.02rem 0.02rem 0em 0em;
+        --deg: -45deg;
+        animation-direction: normal;
+      }
+    }
+ 
+  }
+ 
 
+  @keyframes ship {
+    to{
+      /* 1turn是一圈的意思 */
+      transform: rotate(1turn);
+    }
+  }
 </style>
 

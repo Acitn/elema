@@ -3,7 +3,7 @@ import App from './App.vue';
 import router from './router';
 // 导入路由包
 import VueRouter from 'vue-router'
-import store from './store';
+import store from './store/index.js';
 import VueSource from 'vue-resource';
 // import './assets/iconfont/iconfont.js';
 import rem from './rem';
@@ -28,5 +28,7 @@ new Vue({
   store,
   render: h => h(App)
 }).$mount('#app')
+
+
 
 
