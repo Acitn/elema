@@ -169,7 +169,7 @@
         width: 20px;
         height: 20px;
         color: #C1C1C1;
-        border-width: 0.02rem 0.02rem 0em 0em;
+        border-width: 0.02rem 0.02rem 0.02em 0em;
         --deg: -45deg;
         animation-direction: normal;
       }
