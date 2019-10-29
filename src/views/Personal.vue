@@ -216,7 +216,7 @@ export default {
             font-size: .16rem;
             display: flex;
             justify-content: space-between;
-            padding: .12rem 0;
+            padding: .10rem 0;
             .itemLeft{
                .iconfont{
                    color: #009CFF;

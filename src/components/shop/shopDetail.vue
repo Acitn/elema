@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="top">
+        <header class="top">
             <div class="toolbar">
                 <i class="iconfont icon-left-arrow" @click="back()"></i>
                 <div class="right">
@@ -31,21 +31,78 @@
                 </div>
                 <div class="bottomText">公告：(一)您的满意好评是我们和骑手小哥的服务目标，如有</div>
             </div>
-        </div>
+        </header>
+        <main>
+            <tabs :active = "active">
+                <tabsPane title="点餐" >
+                    <div class="content">
+                        <div class="ad"></div>
+						<scrollBar title="商家推荐">
+							<scrollItem v-for="(item,i) in scrollItem" 
+										:key="i" 
+										:title="item.title"
+										:sales="item.sales"
+										:price="item.price"
+										:original="item.original"
+										:img_url="item.img_url">
+							</scrollItem>
+						</scrollBar>
+						
+						<van-sidebar v-model="activeKey">
+						  <van-sidebar-item v-for="(item,i) in sliderList"
+											:key="i"
+											:title="item.title"
+											:info="item.info"/>
+						</van-sidebar>
+                    </div>
+                </tabsPane>
+                <tabsPane title="评价" count="3899">内容二</tabsPane>
+                <tabsPane title="商家" text="有故事">内容三</tabsPane>
+            </tabs>
+        </main>
     </div>
 </template>
 
 <script>
+import tabs from './tabs';
+import tabsPane from './tabsPane';
+import scrollBar from './scrollBar';
+import scrollItem from './scrollItem';
 export default {
+    components:{
+        tabs,
+        tabsPane,
+		scrollBar,
+		scrollItem
+    },
+    data(){
+        return {
+            active:0,
+			activeKey: 0,
+			scrollItem:[],
+            list:[{text:"点餐"},{text:"评价",count:"3899"},{text:"商家",label:"有故事"}],
+			sliderList:[{title:"热销",info:"2"},{title:"优惠",info:""},{title:"新品上市",info:""},{title:"套餐组合",info:""},{title:"热卖主食",info:""},{title:"小食精选",info:""}]
+        }
+    },
     created() {
+		this.getScrollItem();
         this.$store.state.showBottomNav = false
     },
     methods:{
         back(){
             this.$router.go(-1)
-        }
-    }
-}
+        },
+		getScrollItem(){
+			this.$http.post("https://www.fastmock.site/mock/4888b53ba159c454e964bfb891bf22a2/elma/scrollItem").then(result => {
+			  if(result.status === 200){
+				  this.scrollItem = result.body.data;
+				  console.log(result)
+			  }
+			})
+		}
+	}
+ }
+
 </script>
 
 <style lang="scss" scoped>
@@ -72,14 +129,14 @@ export default {
     }
     .bg{
         background-color:rgb(206,206,206) ;
-        height: 1.5rem;
+        height: 1rem;
     }
     .photo{
         width: 1rem;
         height: 1rem;
         background: red;
         position: absolute;
-        top:.8rem;
+        top:.4rem;
         left: 50%;
         margin-left: -.5rem;
     }
@@ -140,5 +197,17 @@ export default {
             color: #BCBCBC;
         }
     }
+}
+.content{
+    .ad{
+        width: 100%;
+        height: 1rem;
+        background: url("../../assets/ad.jpg") no-repeat;
+        background-size: cover;
+        border-radius: 10px;
+    }
+	/deep/ .van-sidebar-item--select{
+		border: none;
+	} 
 }
 </style>

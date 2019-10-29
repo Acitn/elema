@@ -14,8 +14,8 @@ import shopList from './components/shop/index.js';
 Vue.use(shopList)
 // 安装路由
 Vue.use(VueRouter)
-import { Row, Col,Tab,Tabs,Grid, GridItem,Search,Swipe,SwipeItem,Lazyload,Tabbar,TabbarItem,DropdownMenu,DropdownItem,Icon,SwitchCell,Button } from 'vant';
-Vue.use(VueSource).use(Row).use(Col).use(Tab).use(Tabs).use(Grid).use(GridItem).use(Search).use(Swipe).use(SwipeItem).use(Lazyload).use(Tabbar).use(TabbarItem).use(DropdownMenu).use(DropdownItem).use(Icon).use(SwitchCell).use(Button );
+import { Row, Col,Tab,Tabs,Grid, GridItem,Search,Swipe,SwipeItem,Lazyload,Tabbar,TabbarItem,DropdownMenu,DropdownItem,Icon,SwitchCell,Button,Sidebar,SidebarItem } from 'vant';
+Vue.use(VueSource).use(Row).use(Col).use(Tab).use(Tabs).use(Grid).use(GridItem).use(Search).use(Swipe).use(SwipeItem).use(Lazyload).use(Tabbar).use(TabbarItem).use(DropdownMenu).use(DropdownItem).use(Icon).use(SwitchCell).use(Button).use(Sidebar).use(SidebarItem);
 // Vue.use( Row, Col,Tab,Tabs,Grid, GridItem,Search,Swipe,SwipeItem,Lazyload,Tabbar,TabbarItem,DropdownMenu,DropdownItem,Icon);
 
 Vue.config.productionTip = false
