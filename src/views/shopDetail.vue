@@ -47,13 +47,30 @@
 										:img_url="item.img_url">
 							</scrollItem>
 						</scrollBar>
-						
-						<van-sidebar v-model="activeKey">
-						  <van-sidebar-item v-for="(item,i) in sliderList"
-											:key="i"
+						<div class="slider-content">
+							<van-sidebar v-model="activeKey">
+								<van-sidebar-item v-for="(item,i) in sliderList"
+													:key="i"
+													:title="item.title"
+													:info="item.info"/>
+							</van-sidebar>
+							<scrollList headline="热销" describe="大家喜欢吃,才叫真的好吃">
+								<listItem v-for="(item,i) in scrollItem"
+											:key="i" 
 											:title="item.title"
-											:info="item.info"/>
-						</van-sidebar>
+											:sales="item.sales"
+											:price="item.price"
+											:original="item.original"
+											:img_url="item.img_url"
+											:describe="item.describe"
+											:limit="item.limit"
+											:minimun="item.minimun"
+											:discount="item.discount"
+											:rating="item.rating">
+								</listItem>
+							</scrollList>
+						</div>
+						
                     </div>
                 </tabsPane>
                 <tabsPane title="评价" count="3899">内容二</tabsPane>
@@ -64,16 +81,21 @@
 </template>
 
 <script>
-import tabs from './tabs';
-import tabsPane from './tabsPane';
-import scrollBar from './scrollBar';
-import scrollItem from './scrollItem';
+import tabs from '../components/shop/tabs';
+import tabsPane from '../components/shop/tabsPane';
+import scrollBar from '../components/shop/scrollBar';
+import scrollItem from '../components/shop/scrollItem';
+import scrollList from '../components/shop/scrollList';
+import listItem from '../components/shop/listItem';
+import * as API from 'api/demo';
 export default {
     components:{
         tabs,
         tabsPane,
 		scrollBar,
-		scrollItem
+		scrollItem,
+		scrollList,
+		listItem
     },
     data(){
         return {
@@ -85,18 +107,18 @@ export default {
         }
     },
     created() {
-		this.getScrollItem();
-        this.$store.state.showBottomNav = false
+		this.getScrollItem()
+        this.$store.commit('setShow', false)
+		console.log(this.$store.getters.tip)
     },
     methods:{
         back(){
             this.$router.go(-1)
         },
 		getScrollItem(){
-			this.$http.post("https://www.fastmock.site/mock/4888b53ba159c454e964bfb891bf22a2/elma/scrollItem").then(result => {
-			  if(result.status === 200){
-				  this.scrollItem = result.body.data;
-				  console.log(result)
+			API.post("/scrollItem").then(result => {
+			  if(result.code === 200){
+				  this.scrollItem = result.data;
 			  }
 			})
 		}
@@ -202,12 +224,15 @@ export default {
     .ad{
         width: 100%;
         height: 1rem;
-        background: url("../../assets/ad.jpg") no-repeat;
+        background: url("../assets/images/ad.jpg") no-repeat;
         background-size: cover;
         border-radius: 10px;
     }
 	/deep/ .van-sidebar-item--select{
 		border: none;
 	} 
+	.slider-content{
+		display: flex;
+	}
 }
 </style>

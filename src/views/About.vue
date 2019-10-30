@@ -18,7 +18,7 @@ export default {
     },
     created(){
       this.getImg();
-      this.$store.state.showBottomNav = true
+      this.$store.commit('setShow', true)
     },
     methods:{
       getImg(){

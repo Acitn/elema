@@ -53,7 +53,7 @@
       <nav class="nav">
           <div class="navItem" v-for="(item,i) in nav" :key="i">
               <div class="itemLeft">
-                  <i :class=item.icon></i>
+                  <i :class="item.icon"></i>
                   <span>{{item.text}}</span>
               </div>
               <div class="itemRight">
@@ -81,7 +81,7 @@ export default {
         }
     },
     created(){
-        this.$store.state.showBottomNav = true
+        this.$store.commit('setShow', true)
     }
 }
 </script>
@@ -119,11 +119,12 @@ export default {
                 margin-bottom: .13rem
             }
             .signIn{
-                width: 110px;
+                width: 120px;
                 font-size: .12rem;
                 border: 1px solid #CBCBCB;
                 padding: 5px 10px;
                 border-radius: 50px;
+				white-space: nowrap;
                 .iconfont{
                     font-size: .12rem;
                     color: #FC4E30;
@@ -134,7 +135,7 @@ export default {
         .userImg{
             width: 80px;
             height: 80px;
-            background: url("../assets/user.jpg");
+            background: url("../assets/images/user.jpg");
             background-size: cover;
             border-radius: 50%;
         }
