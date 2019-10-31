@@ -1,7 +1,7 @@
-import shopList from './shopList.vue'
+import ShopList from './ShopList.vue'
 const component = {
     install:function(Vue){
-        Vue.component('shopList',shopList)
+        Vue.component('ShopList',ShopList)
     }  //'component-name'这就是后面可以使用的组件的名字，install是默认的一个方法
     
 }

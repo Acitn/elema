@@ -15,12 +15,12 @@ import './assets/iconfont/iconfont.css';
 import mixins from './mixins';
 Vue.mixin(mixins);
 //全局安装自定义组件
-import shopList from './components/shop/index.js';
-Vue.use(shopList)
+import ShopList from './components/shop/index.js';
+Vue.use(ShopList)
 // 安装路由
 Vue.use(VueRouter)
-import { Row, Col,Tab,Tabs,Grid, GridItem,Search,Swipe,SwipeItem,Lazyload,Tabbar,TabbarItem,DropdownMenu,DropdownItem,Icon,SwitchCell,Button,Sidebar,SidebarItem } from 'vant';
-Vue.use(Row).use(Col).use(Tab).use(Tabs).use(Grid).use(GridItem).use(Search).use(Swipe).use(SwipeItem).use(Lazyload).use(Tabbar).use(TabbarItem).use(DropdownMenu).use(DropdownItem).use(Icon).use(SwitchCell).use(Button).use(Sidebar).use(SidebarItem);
+import { Row, Col,Grid, GridItem,Search,Swipe,SwipeItem,Lazyload,Tabbar,TabbarItem,DropdownMenu,DropdownItem,Icon,SwitchCell,Button,Sidebar,SidebarItem } from 'vant';
+Vue.use(Row).use(Col).use(Grid).use(GridItem).use(Search).use(Swipe).use(SwipeItem).use(Lazyload).use(Tabbar).use(TabbarItem).use(DropdownMenu).use(DropdownItem).use(Icon).use(SwitchCell).use(Button).use(Sidebar).use(SidebarItem);
 // Vue.use( Row, Col,Tab,Tabs,Grid, GridItem,Search,Swipe,SwipeItem,Lazyload,Tabbar,TabbarItem,DropdownMenu,DropdownItem,Icon);
 
 Vue.config.productionTip = false

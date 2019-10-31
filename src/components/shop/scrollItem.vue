@@ -21,7 +21,7 @@
 
 <script>
 	export default{
-		name:"scrollItem",
+		name:"ScrollItem",
 		props: {
 		    title: {
 		        type: String,

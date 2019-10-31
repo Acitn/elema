@@ -44,7 +44,7 @@
 
 <script>
   export default{
-    name:"shopList",
+    name:"ShopList",
     props:{
       shopValue:{
         type:Array,

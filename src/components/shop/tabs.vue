@@ -17,7 +17,7 @@
 
 <script>
 export default {
-    name:"tabs",
+    name:"Tabs.",
     props: {
 		//选中标签
 		active: {
@@ -39,8 +39,8 @@ export default {
         getTabs () {
             //返回tabs子元素的内容
             return this.$children.filter(function (item) {
-                //过滤除了tabsPane的内容
-                return item.$options.name === 'tabsPane'
+                //过滤除了TabsPane的内容
+                return item.$options.name === 'TabsPane'
             })
         },
         updateNav () {

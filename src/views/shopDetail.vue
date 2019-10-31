@@ -33,20 +33,20 @@
             </div>
         </header>
         <main>
-            <tabs :active = "active">
-                <tabsPane title="点餐" >
+            <Tabs :active = "active">
+                <TabsPane title="点餐" >
                     <div class="content">
                         <div class="ad"></div>
-						<scrollBar title="商家推荐">
-							<scrollItem v-for="(item,i) in scrollItem" 
+						<ScrollBar title="商家推荐">
+							<ScrollItem v-for="(item,i) in scrollItem" 
 										:key="i" 
 										:title="item.title"
 										:sales="item.sales"
 										:price="item.price"
 										:original="item.original"
 										:img_url="item.img_url">
-							</scrollItem>
-						</scrollBar>
+							</ScrollItem>
+						</ScrollBar>
 						<div class="slider-content">
 							<van-sidebar v-model="activeKey">
 								<van-sidebar-item v-for="(item,i) in sliderList"
@@ -54,8 +54,8 @@
 													:title="item.title"
 													:info="item.info"/>
 							</van-sidebar>
-							<scrollList headline="热销" describe="大家喜欢吃,才叫真的好吃">
-								<listItem v-for="(item,i) in scrollItem"
+							<ScrollList headline="热销" describe="大家喜欢吃,才叫真的好吃">
+								<ListItem v-for="(item,i) in scrollItem"
 											:key="i" 
 											:title="item.title"
 											:sales="item.sales"
@@ -67,35 +67,35 @@
 											:minimun="item.minimun"
 											:discount="item.discount"
 											:rating="item.rating">
-								</listItem>
-							</scrollList>
+								</ListItem>
+							</ScrollList>
 						</div>
 						
                     </div>
-                </tabsPane>
-                <tabsPane title="评价" count="3899">内容二</tabsPane>
-                <tabsPane title="商家" text="有故事">内容三</tabsPane>
-            </tabs>
+                </TabsPane>
+                <TabsPane title="评价" count="3899">内容二</TabsPane>
+                <TabsPane title="商家" text="有故事">内容三</TabsPane>
+            </Tabs>
         </main>
     </div>
 </template>
 
 <script>
-import tabs from '../components/shop/tabs';
-import tabsPane from '../components/shop/tabsPane';
-import scrollBar from '../components/shop/scrollBar';
-import scrollItem from '../components/shop/scrollItem';
-import scrollList from '../components/shop/scrollList';
-import listItem from '../components/shop/listItem';
+import Tabs from '../components/shop/Tabs';
+import TabsPane from '../components/shop/TabsPane';
+import ScrollBar from '../components/shop/ScrollBar';
+import ScrollItem from '../components/shop/ScrollItem';
+import ScrollList from '../components/shop/ScrollList';
+import ListItem from '../components/shop/ListItem';
 import * as API from 'api/demo';
 export default {
     components:{
-        tabs,
-        tabsPane,
-		scrollBar,
-		scrollItem,
-		scrollList,
-		listItem
+        Tabs,
+        TabsPane,
+		ScrollBar,
+		ScrollItem,
+		ScrollList,
+		ListItem
     },
     data(){
         return {

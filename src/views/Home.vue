@@ -52,20 +52,20 @@
           <div class="menuText">销量</div>
         </div>
         <div class="menuItem">
-          <pullDown :title="title" :dataList="option2" :itemTitle="title2"></pullDown>
+          <PullDown :title="title" :dataList="option2" :itemTitle="title2"></PullDown>
         </div>
       </div>
-      <shopList :shopValue="shop" :load="!query"></shopList>
+      <ShopList :shopValue="shop" :load="!query"></ShopList>
     </section>
   </div>
 </template>
 <script>
-import pullDown from '../components/shop/pullDown.vue'
+import PullDown from '../components/shop/PullDown'
 import * as API from 'api/demo';
 export default {
   name:"Home",
   components:{
-    pullDown
+    PullDown
   },
   data(){
     return {
