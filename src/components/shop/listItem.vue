@@ -95,24 +95,32 @@
 	.item{
 		border-radius: 10px;
 		display: flex;
-		flex-direction: column;
 		text-align: left;
 		margin-right: 5px;
+		margin: 8px;
 		&:last-child{
 			margin-right: 0;	
 		}
 		img{
-			width: 140px;
-			height: 140px;
+			width: 120px;
+			height: 120px;
 			border-radius: 5px;
 		}
 		.box{
 			padding: 0 8px;
 			display: flex;
 			flex-direction: column;
+			overflow: hidden;
+			flex: 1;
 			.text{
 				padding: 5px 0;
 				font-size: 16px;
+			}
+			.describe{
+				width: 100%;
+				white-space: nowrap;
+				overflow: hidden;
+				text-overflow:ellipsis;
 			}
 			.sales{
 				font-size: 10px;

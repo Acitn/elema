@@ -5,7 +5,7 @@
         <div class="addressBox">
           <i class="iconfont icon-didian"></i>
           <span class="address">广东省茂名市茂南</span>
-          <i class="iconfont icon-arrow-left" style="color:#A2A2A2;font-size:.18rem"></i>
+          <i class="iconfont icon-arrow-left"></i>
         </div>
         
         <div class="rightBox">
@@ -104,20 +104,19 @@ export default {
   mounted () {
     // 添加滚动事件，检测滚动到页面底部
     window.addEventListener('scroll', this.loadMore)
-    // 添加滚动事件，检测滚动到页面底部
     window.addEventListener('scroll', this.fixed)
   },
   methods:{
     onConfirm() {
       this.$refs.item.toggle();
     },
-    fixed(){
-      if(document.body.scrollTop>= 60){
-        this.header = false;
-      }else if(document.body.scrollTop <= 60){
-        this.header = true;
-      }
-    },
+    // fixed(){
+    //   if(document.body.scrollTop>= 60){
+    //     this.header = false;
+    //   }else if(document.body.scrollTop <= 60){
+    //     this.header = true;
+    //   }
+    // },
     loadMore(){
       if (((window.screen.height + document.body.scrollTop) > (document.body.clientHeight - 100)) && this.query) {
         this.query = false;
@@ -208,8 +207,8 @@ a {
   padding:  15px;
   box-sizing: border-box;
   .addressBox{
-    font-size: .2rem;
-    width: 2.1rem;
+    font-size: 20px;
+    width: 210px;
     display: flex;
     align-items: center;
     .address{
@@ -221,21 +220,25 @@ a {
       border-right: 2px solid #DBDBDB;
     }
     .iconfont{
-      font-size: .22rem;
+      font-size: 22px;
       color: #07A9FF;
+    }
+    .icon-arrow-left{
+      color:#A2A2A2;
+      font-size:18px;
     }
   }
   .rightBox{
-    font-size: .16rem;
+    font-size: 16px;
     display: flex;
     align-items: center;
     color: #07A9FF;
     .iconfont{
-      font-size: .22rem;
-      margin-right: .02rem
+      font-size: 22px;
+      margin-right: 2px;
     }
     .weather{
-      margin-left: .08rem
+      margin-left: 8px;
     }
   }
 }

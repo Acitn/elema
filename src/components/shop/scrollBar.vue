@@ -25,7 +25,7 @@ export default{
 			text-align: left;
 			font-size: 18px;
 			font-weight: bold;
-			margin: .08rem;
+			margin: 8px;
 		}
 		.scroll{
 			display: flex;

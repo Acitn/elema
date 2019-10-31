@@ -11,5 +11,13 @@ export default {
     mounted(){
     },
     methods: {
+		adsorb(top){
+			console.log("dddd")
+		  if(document.body.scrollTop>= top){
+		    return false;
+		  }else if(document.body.scrollTop <= top){
+		     return true;
+		  }
+		},
     }
 }

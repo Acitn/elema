@@ -88,7 +88,9 @@ import ScrollItem from '../components/shop/ScrollItem';
 import ScrollList from '../components/shop/ScrollList';
 import ListItem from '../components/shop/ListItem';
 import * as API from 'api/demo';
+import Mixins from '../mixins/index';
 export default {
+	mixins:[Mixins],
     components:{
         Tabs,
         TabsPane,
@@ -109,8 +111,11 @@ export default {
     created() {
 		this.getScrollItem()
         this.$store.commit('setShow', false)
-		console.log(this.$store.getters.tip)
     },
+	mounted(){
+		// 添加滚动事件，检测滚动到页面底部
+		window.addEventListener('scroll', this.adsorb(60))
+	},
     methods:{
         back(){
             this.$router.go(-1)
@@ -121,7 +126,20 @@ export default {
 				  this.scrollItem = result.data;
 			  }
 			})
+		},
+		function throttle(func, wait) {
+		  let previous = 0
+		  return function throttled(...args) {
+		    const ctx = this
+		    const now = Date.now()
+		    const remain = wait - (now - previous)
+		    if (remain <= 0) {
+		      func.apply(ctx, args)
+		      previous = now
+		    }
+		  }
 		}
+
 	}
  }
 
@@ -138,34 +156,34 @@ export default {
         display: flex;
         width: 100%;
         height: 60px;
-        padding-top: .2rem;
+        padding-top: 20px;
         color: #FFFAF8;
         justify-content: space-between;
         .iconfont{
-            font-size: .20rem;
-            margin-left: .15rem;
+            font-size: 20px;
+            margin-left: 15px;
         }
         .icon-pin{
-            margin-right: .15rem;
+            margin-right: 15px;
         }
     }
     .bg{
         background-color:rgb(206,206,206) ;
-        height: 1rem;
+        height: 100px;
     }
     .photo{
-        width: 1rem;
-        height: 1rem;
+        width: 100px;
+        height: 100px;
         background: red;
         position: absolute;
-        top:.4rem;
+        top: 40px;
         left: 50%;
-        margin-left: -.5rem;
+        margin-left: -50px;
     }
     .shoucang{
         position: absolute;
-        top: 1.3rem;
-        right: .2rem;
+        top: 130px;
+        right: 20px;
         width: 40px;
         height: 40px;
         background: #fff;
@@ -177,34 +195,34 @@ export default {
     }
     .icon-shoucang{
         color: #D64C6C;
-        font-size: .2rem;
+        font-size: 20px;
     }
     .textBox{
-        margin-top: .5rem;
+        margin-top: 50px;
         .title{
-            font-size: .2rem;
+            font-size: 20px;
             font-weight: bold;
         }
         .info{
-            font-size: .12rem;
-            margin: .1rem 0;
+            font-size: 12px;
+            margin: 10px 0;
             span{
-                margin-left: .1rem;
+                margin-left: 10px;
                 color: #8B8B8B;
             }
         }
         .discountBox{
-            font-size: .12rem;
+            font-size: 12px;
             display: flex;
             justify-content: space-between;
-            padding: 0 .4rem;
-            margin-bottom: .1rem;
+            padding: 0 40px;
+            margin-bottom: 10px;
             color: #BCBCBC;
             span{
-                margin-left: .1rem;
+                margin-left: 10px;
                 color: #CB736E;
                 border:1px solid #E4E4E4;
-                padding: .05rem;
+                padding: 5;
             }
             span:nth-child(1){
                 margin-left: 0;
@@ -214,8 +232,8 @@ export default {
             overflow: hidden;
             text-overflow: ellipsis;
             white-space:nowrap; 
-            padding: 0 .4rem;
-            font-size: .12rem;
+            padding: 0 40px;
+            font-size: 12px;
             color: #BCBCBC;
         }
     }
@@ -223,7 +241,7 @@ export default {
 .content{
     .ad{
         width: 100%;
-        height: 1rem;
+        height: 100px;
         background: url("../assets/images/ad.jpg") no-repeat;
         background-size: cover;
         border-radius: 10px;
@@ -233,6 +251,7 @@ export default {
 	} 
 	.slider-content{
 		display: flex;
+		margin-top: 20px;
 	}
 }
 </style>

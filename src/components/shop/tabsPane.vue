@@ -48,5 +48,6 @@ export default {
 <style lang="scss" scoped>
 .tab_content{
     margin: 15px;
+	margin-bottom: 0;
 }
 </style>

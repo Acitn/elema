@@ -8,9 +8,7 @@
             </div>
             <div class="bottom"></div>
         </div>
-        <div class="tab_content">
-            <slot></slot>
-        </div>
+        <slot></slot>
     </div>
 
 </template>
@@ -87,24 +85,24 @@ export default {
 <style lang="scss" scoped>
     .tab-wrapper{
         background-color: #fff;
-        margin: .15rem 0;
+        margin-top: 15px;
         .tab_header{
             display: flex;
             position: relative;
             border-bottom: 1px solid #F2F2F1;
             .header_item{
                 flex: 1;
-                line-height: .35rem;
+                line-height: 35px;
                 .header_text{
-                    font-size: .14rem;
-                    padding: 0 .05rem;
+                    font-size: 14px;
+                    padding: 0 5px;
                 }
                 .count{
                     color: #ACACAA;
                 }
                 .label{
-                    font-size: .10rem;
-                    padding: .03rem .05rem;
+                    font-size: 10px;
+                    padding: 3px 5px;
                     background-color: #E5F3FC;
                     color: #2199FF;
                     border-radius: 10px;
@@ -113,11 +111,11 @@ export default {
             }
             .bottom{
                 position: absolute;
-                top: .34rem;
+                top: 34px;
                 left: 0;
-                width: .6rem;
+                width: 60px;
                 background-color: #278EE5;
-                height: .03rem;
+                height: 3px;
                 transition-duration:.3s;
             }
         }

@@ -105,18 +105,14 @@
                 display: grid;
                 grid-template-columns: repeat(3,1fr);
                 // grid-template-columns: repeat(3,33.33%);
-                grid-row-gap: .08rem;
-                grid-column-gap: .08rem;
+                grid-row-gap: 8px;
+                grid-column-gap: 8px;
                 .item{
-                    // width: 33.33%;
-                    // flex-basis: 33.33%;
                     color:#959595;
-                    // margin-top: .1rem;
                     div{
                         font-size: 12px;
-                        padding: .08rem .10rem;
+                        padding: 8px 10px;
                         width: auto;
-                        // margin-right: .05rem;
                         background-color: #F9F9F9;
                     }
                 }
@@ -126,15 +122,15 @@
             display: grid;
             grid-template-columns: 1fr 1fr;
             font-size: 16px;
-            margin-top: 1rem;
+            margin-top: 100px;
             .clear{
-                padding: .15rem 0;
+                padding: 15px 0;
                 color: #DCDCDC;
                 border: 1px solid #EDEDED;
                 box-shadow: 10px 0 #EDEDED;
             }
             .confirm{
-                padding: .15rem 0;
+                padding: 15px 0;
                 background-color: #00A5FF;
                 font-weight: bold;
                 color: #fff;

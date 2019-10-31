@@ -7,7 +7,7 @@
         <div class="second">
           <div>
             <div class="secondLeft">
-              <i class="iconfont icon-xingxing" style="font-size:12px;"></i>
+              <i class="iconfont icon-xingxing"></i>
               <span>{{item.grade}}</span>
             </div>
             <span>月售{{item.sales}}</span>
@@ -19,12 +19,12 @@
         <div class="third">
           <div>
             <span class="thirdLeft">起送&yen;{{item.upToSend}}</span>
-            <span v-if="item.free == true" class="thirdLeft2">免配送费<span style="margin-left:.03rem;text-decoration:line-through;">&yen;{{item.deliveryCost}}</span></span>
+            <span v-if="item.free == true" class="thirdLeft2">免配送费<span class="text">&yen;{{item.deliveryCost}}</span></span>
             <span v-else class="thirdLeft2">配送&yen;{{item.deliveryCost}}</span>
           </div>
           <div class="thirdRight">
             <span>{{item.deliveryTime}}分钟</span>
-            <span style="margin-left:.05rem">{{item.distance}}</span>
+            <span class="text">{{item.distance}}</span>
           </div>
         </div>
         <div class="description">"{{item.description}}"</div>
@@ -33,7 +33,7 @@
         </div>
       </div>
     </router-link >
-    <div v-if="load" class="load">
+    <div  v-if="load" class="load">
       <div class="circle">   
         <div class="box"></div>
       </div>
@@ -69,7 +69,7 @@
     border-radius: 3px;
     display: inline-block;
     color: #fff;
-    padding: .02rem .04rem;
+    padding: 2px 4px;
     font-size: 9px;
   }
   .shopItem{
@@ -78,15 +78,15 @@
     width: 100%;
     display: flex;
     display: -webkit-flex; /* Safari */
-    padding: .1rem;
-    padding-right: .058rem;
+    padding: 10px;
+    padding-right: 5.8px;
     font-size: 16px;
     background: #fff;
     img{
-      width: .8rem;
-      height: .8rem;
+      width: 80px;
+      height: 80px;
       border-radius: 5px;
-      margin-right: .05rem;
+      margin-right: 5px;
     }
     .content{
       flex: 2;
@@ -95,7 +95,6 @@
         color: #444;
         font-size: 16px;
         font-weight:bold;
-        // margin-bottom: .05rem;
       }
       .second{
         color: #666;
@@ -103,12 +102,13 @@
         display: flex;
         display: -webkit-flex; /* Safari */
         justify-content: space-between;
-        // margin-bottom: .05rem;
         .secondLeft{
           display: inline-block;
           color: #FF6300;
-          margin-right: .05rem;
-          
+          margin-right: 5px;
+          .iconfont{
+			  font-size:12px;
+		  }
         }
         .secondRight{
 
@@ -120,18 +120,26 @@
         display: flex;
         display: -webkit-flex; /* Safari */
         justify-content: space-between;
-        // margin-bottom: .01rem;
         .thirdLeft2{
-          margin-left: .05rem;
+          margin-left: 5px;
+		  .text{
+			  margin-left:3px;
+			  text-decoration:line-through;
+		  }
         }
+		.thirdRight{
+			.text{
+				margin-left:5px;
+			}
+		}
       }
       .description{
         display: inline-block;
         background-color: #FFF2E7;
         color: #FEA55F;
         font-size: 10px;
-        margin-bottom: .05rem;
-        padding: .02rem .08rem;
+        margin-bottom: 5px;
+        padding: 2px 8px;
       }
       .tagBox{
         display: flex;
@@ -140,7 +148,7 @@
           border: 1px solid #FFF4F2;
           color: #FF978A;
           padding: 2px;
-          margin: 0 .02rem;
+          margin: 0 2px;
           &:first{
             margin-left:0; 
             padding-left: 0;
@@ -169,7 +177,7 @@
         width: 20px;
         height: 20px;
         color: #C1C1C1;
-        border-width: 0.02rem 0.02rem 0.02em 0em;
+        border-width: 2px 2px 0.02em 0em;
         --deg: -45deg;
         animation-direction: normal;
       }
