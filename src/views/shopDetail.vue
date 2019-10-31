@@ -126,20 +126,7 @@ export default {
 				  this.scrollItem = result.data;
 			  }
 			})
-		},
-		function throttle(func, wait) {
-		  let previous = 0
-		  return function throttled(...args) {
-		    const ctx = this
-		    const now = Date.now()
-		    const remain = wait - (now - previous)
-		    if (remain <= 0) {
-		      func.apply(ctx, args)
-		      previous = now
-		    }
-		  }
 		}
-
 	}
  }
 
