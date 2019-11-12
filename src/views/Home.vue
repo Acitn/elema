@@ -101,22 +101,26 @@ export default {
     this.getShopList();
     this.$store.commit('setShow', true)
   },
-  mounted () {
+  mounted(){
     // 添加滚动事件，检测滚动到页面底部
     window.addEventListener('scroll', this.loadMore)
     window.addEventListener('scroll', this.fixed)
+  },
+  destroyed(){
+	window.removeEventListener("scroll",this.loadMore)
+	window.removeEventListener("scroll",this.fixed)
   },
   methods:{
     onConfirm() {
       this.$refs.item.toggle();
     },
-    // fixed(){
-    //   if(document.body.scrollTop>= 60){
-    //     this.header = false;
-    //   }else if(document.body.scrollTop <= 60){
-    //     this.header = true;
-    //   }
-    // },
+    fixed(){
+      if(document.body.scrollTop>= 60){
+        this.header = false;
+      }else if(document.body.scrollTop < 60){
+        this.header = true;
+      }
+    },
     loadMore(){
       if (((window.screen.height + document.body.scrollTop) > (document.body.clientHeight - 100)) && this.query) {
         this.query = false;

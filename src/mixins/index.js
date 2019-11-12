@@ -11,13 +11,18 @@ export default {
     mounted(){
     },
     methods: {
-		adsorb(top){
-			console.log("dddd")
-		  if(document.body.scrollTop>= top){
-		    return false;
-		  }else if(document.body.scrollTop <= top){
-		     return true;
-		  }
-		},
+		// adsorb(className){
+		// 	const _this = this;
+		// 	window.addEventListener("scroll",function(){
+		// 		debugger
+		// 		let top = document.getElementsByClassName(className)["0"].offsetTop;
+		// 		if(document.body.scrollTop>= top){
+		// 			_this.adsorbValue = true;
+		// 		}else if(document.body.scrollTop <= top){
+		// 			_this.adsorbValue = false;
+		// 		}
+		// 	})
+		  
+		// },
     }
 }

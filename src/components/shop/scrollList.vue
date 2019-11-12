@@ -28,7 +28,6 @@ export default{
 		getWinHeight(){
 			document.getElementsByClassName("scrollList")["0"].style.height= window.innerHeight+ "px"
 			// document.getElementsByClassName("scrollList")["0"].style.height= (window.innerHeight - 50) + "px"
-			console.log(document.getElementsByClassName("scrollList"))
 		},
 		fixed(){
 			

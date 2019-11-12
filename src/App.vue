@@ -41,7 +41,7 @@ a{
   color: #7d7e80;
 }
 footer{
-  padding-top: 50px;
+  margin-top: 50px;
 }
 img{ 
   pointer-events: none; //阻止点击预览图片

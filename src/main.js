@@ -25,9 +25,6 @@ Vue.use(Row).use(Col).use(Grid).use(GridItem).use(Search).use(Swipe).use(SwipeIt
 
 Vue.config.productionTip = false
 
-//设置请求的根路径
-// Vue.http.options.root = 'https://www.fastmock.site/mock/4888b53ba159c454e964bfb891bf22a2/elma';
-
 new Vue({
   router,
   store,

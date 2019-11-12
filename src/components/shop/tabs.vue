@@ -85,7 +85,6 @@ export default {
 <style lang="scss" scoped>
     .tab-wrapper{
         background-color: #fff;
-        margin-top: 15px;
         .tab_header{
             display: flex;
             position: relative;
