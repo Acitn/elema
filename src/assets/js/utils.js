@@ -9,15 +9,17 @@
 
 //节流 间隔delay时间再执行
 function throttle(fn, delay) { 
-  var prev = Date.now()         
-  return function() {               
+
+  var prev = Date.now()      
+  return function() {         
     var now = Date.now()               
     if (now - prev > delay) {                   
       fn()                
-      prev = Date.now()             
-    }         
+      prev = Date.now()   
+    }      
   }       
-}       
+}  
+   
 // export {debounce,throttle}
- export default {throttle}
+ export {throttle}
 // export default {debounce} //默认只能一个

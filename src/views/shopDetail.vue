@@ -1,6 +1,6 @@
 <template>
     <div>
-        <header class="top">
+        <header class="top" @scroll.passive="fnScroll" ref="top">
 			<div class="topMain" v-show="!adsorbValue">
 				<div class="toolbar">
 				    <i class="iconfont icon-left-arrow" @click="back()"></i>
@@ -44,28 +44,9 @@
                 <TabsPane title="点餐" >
                     <div class="content">
                         <div class="ad"></div>
-						<ScrollBar title="商家推荐">
-							<ScrollItem v-for="(item,i) in scrollItem" 
-										:key="i" 
-										:title="item.title"
-										:sales="item.sales"
-										:price="item.price"
-										:original="item.original"
-										:img_url="item.img_url">
-							</ScrollItem>
-						</ScrollBar>
-						<div class="slider-content">
-							<van-sidebar v-model="activeKey">
-								<van-sidebar-item v-for="(item,i) in sliderList"
-													:key="i"
-													:title="item.title"/>
-							</van-sidebar>
-							<ListItem :data="scrollItem2"></ListItem>
-<!-- 							<ScrollList v-for="(item,i) in scrollItem2" :key="i" :headline="item.title" :describe="item.describe">
-								<ListItem :data="item.items"></ListItem>
-							</ScrollList> -->
-						</div>
-						
+						<listBox :data="scrollItem2">
+							<ScrollBar title="商家推荐" :data="scrollItem2"></ScrollBar>
+						</listBox>
                     </div>
                 </TabsPane>
                 <TabsPane title="评价" count="3899">内容二</TabsPane>
@@ -76,27 +57,24 @@
 </template>
 
 <script>
-import Tabs from '../components/shop/Tabs';
-import TabsPane from '../components/shop/TabsPane';
-import ScrollBar from '../components/shop/ScrollBar';
-import ScrollItem from '../components/shop/ScrollItem';
-import ScrollList from '../components/shop/ScrollList';
-import ListItem from '../components/shop/ListItem';
+import Tabs from 'components/shop/Tabs';
+import TabsPane from 'components/shop/TabsPane';
+import ScrollBar from 'components/shop/ScrollBar';
+import listBox from 'components/shop/listBox';
 import * as API from 'api/demo';
 // import Mixins from '../mixins/index';
-import {throttle} from '../assets/js/utils'
+import {throttle} from 'assets/js/utils'
 export default {
 	// mixins:[Mixins],
     components:{
         Tabs,
         TabsPane,
 		ScrollBar,
-		ScrollItem,
-		ScrollList,
-		ListItem
+		listBox
     },
     data(){
         return {
+			fnScroll: () => {},
 			adsorbValue:false,
             active:0,
 			activeKey: 0,
@@ -116,10 +94,14 @@ export default {
 		// window.removeEventListener("scroll",this.adsorb(60))
 		// window.addEventListener('scroll', this.adsorb)
 		// throttle(this.adsorb(),1000);
-		// window.addEventListener('scroll', throttle(this.adsorb(),1000))
+		
+		//这种方法不适用于节流返回的匿名函数，这样关闭时删除不了这个监听
+		// window.addEventListener('scroll', throttle(this.adsorb,1000))
+		this.fnScroll = throttle(this.adsorb, 1000)
+		window.addEventListener('scroll', this.fnScroll)
 	},
 	destroyed(){
-		// window.removeEventListener("scroll",this.adsorb)
+		window.removeEventListener('scroll', this.fnScroll)
 	},
     methods:{
         back(){
@@ -140,17 +122,14 @@ export default {
 			})
 		},
 		adsorb(){
-			// debounce(() => {
-			// 	console.log("防抖")
-			// }, 1000)
-			// alert("d")
-			let top = document.getElementsByClassName("textBox")["0"].offsetTop;
-			if(document.body.scrollTop>= top){
-				// alert("d")
-				this.adsorbValue = true;
-			}else if(document.body.scrollTop <= top){
-				this.adsorbValue = false;
-			}
+			let top = this.$refs.top.offsetTop;
+			console.log(document.getElementsByClassName("top"))
+			console.log(document.body.scrollTop)
+			// if(document.body.scrollTop>= top){
+			// 	this.adsorbValue = true;
+			// }else if(document.body.scrollTop <= top){
+			// 	this.adsorbValue = false;
+			// }
 		}
 	}
  }
@@ -212,7 +191,7 @@ export default {
         font-size: 20px;
     }
     .textBox{
-        margin-top: 50px;
+        padding-top: 50px;
         .title{
             font-size: 20px;
             font-weight: bold;
@@ -254,20 +233,16 @@ export default {
 }
 .content{
     .ad{
-        width: 100%;
         height: 100px;
         background: url("../assets/images/ad.jpg") no-repeat;
         background-size: cover;
         border-radius: 10px;
+		margin: 0 15px;
     }
 	/deep/ .van-sidebar-item--select{
 		border: none;
 	} 
-	.slider-content{
-		display: flex;
-		margin-top: 20px;
-		margin-bottom: 50px;
-	}
+
 }
 
 .headerFixed{
@@ -275,7 +250,7 @@ export default {
   width: 100%;
   top: 0;
   height: 55px;;
-  z-index: 9999;
+  z-index: 9;
 }
 .absorbTop{
 	display: flex;
@@ -283,6 +258,10 @@ export default {
 	justify-content: space-between;
 	padding: 0 15px;
 	background: #fff;
+	position: fixed;
+	width: 100%;
+	z-index: 9;
+	box-sizing: border-box;
 	.van-search__content--round{
 		background-color: #E6E6E6;
 	}

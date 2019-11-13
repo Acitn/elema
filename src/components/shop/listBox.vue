@@ -1,25 +1,34 @@
 <template>
 	<div style="flex: 1;">
-		<div class="scrollList" v-for="(item,index) in data" :key="index">
-			<div class="title">
-				<div class="headline">{{item.title}}</div>
-				<div class="describe">{{item.describe}}</div>
-			</div>
-			<div class="scrollItem" v-for="(item2,index2) in item.items" :key="index2">
-				<img :src="item2.img_url" alt="">
-				<div class="box">
-					<span class="scrollText">{{item2.name}}</span>
-					<span class="scrollDescribe">{{item2.describe}}</span>
-					<span class="scrollSales">月售{{item2.sales}}</span>
-					<div class="bottom">
-						<div class="price">
-							<span class="discount" >&yen;{{item2.price}}</span>
-							<span class="original">&yen;{{item2.original}}</span>
-						</div>
-						<div :class="{account: item2.num>0 }">
-							<i class="iconfont icon-jianshao" v-show="item2.num>0"  @click="reduce(index, index2)"></i>
-							<span class="number" v-show="item2.num>0">{{item2.num}}</span>
-							<i class="iconfont icon-add-fill" @click="add(index, index2, $event)"></i>
+		<slot></slot>
+		<div class="slider-content">	
+			<van-sidebar v-model="activeKey">
+				<van-sidebar-item v-for="(list,i) in data" :key="i" :title="list.title"/>
+			</van-sidebar>
+			<!-- @scroll.passive -->
+			<div class="scrollList"  ref="scrollList" @scroll.passive="fnScroll">
+				<div class="scrollItem" v-for="(item,index) in data" :key="index" :id="index">
+					<div :class="{fixed: activeKey == index}" class="title">
+						<div class="headline">{{item.title}}</div>
+						<div class="describe">{{item.describe}}</div>
+					</div>
+					<div class="box" v-for="(item2,index2) in item.items" :key="index2">
+						<img :src="item2.img_url" alt="">
+						<div class="box">
+							<span class="scrollText">{{item2.name}}</span>
+							<span class="scrollDescribe">{{item2.describe}}</span>
+							<span class="scrollSales">月售{{item2.sales}}</span>
+							<div class="bottom">
+								<div class="price">
+									<span class="discount" >&yen;{{item2.price}}</span>
+									<span class="original">&yen;{{item2.original}}</span>
+								</div>
+								<div :class="{account: item2.num>0 }">
+									<i class="iconfont icon-jianshao" v-show="item2.num>0"  @click="reduce(index, index2)"></i>
+									<span class="number" v-show="item2.num>0">{{item2.num}}</span>
+									<i class="iconfont icon-add-fill" @click="add(index, index2, $event)"></i>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -65,8 +74,9 @@
 </template>
 
 <script>
+import {throttle} from 'assets/js/utils'
 	export default{
-		name:"ScrollItem",
+		name:"listBox",
 		props: {
 			data:{
 				type: Array,
@@ -75,10 +85,20 @@
 		},
 		data(){
 			return {
-				
+				activeKey: 0,
+				fnScroll: () => {}
 			}
 		},
+		mounted(){
+			this.fnScroll = throttle(this.side, 1000)
+			// this.$refs.scrollList.addEventListener('scroll', throttle(this.side,1000))
+		},
 		methods:{
+			side(){
+				// var date=new Date();//获取系统时间
+				// var s=date.getSeconds();//获取秒
+				// console.log(s)
+			},
 			add(index, index2, event){
 				this.data[index].items[index2].num++;
 				// 小球动画 
@@ -115,92 +135,110 @@
 </script>
 
 <style lang="scss" scoped>
-	.scrollList{
-		margin-left: 8px;
-		overflow: scroll;
-		.title{
-			display: flex;
-			align-items: baseline;
-			margin: 8px 0;
-			.headline{
-				font-size: 15px;
-				font-weight: bold;
-			}
-			.describe{
-				margin-left: 8px;
-				font-size: 12px;
-			}
-		}
-	}
-	.scrollItem{
-		border-radius: 10px;
+	.slider-content{
 		display: flex;
-		text-align: left;
-		margin-bottom: 5px;
-		&:last-child{
-			margin-right: 0;	
+		height: calc(100vh - 50px); ;
+		overflow: scroll;
+		margin-top: 20px;
+		margin-bottom: 50px;
+		position: relative;
+		.fixed{
+			position: absolute;
+			top: 0;
+			width:100%;
+			box-shadow: 0 -1px #fff; //解决移动端计算错误留有1px空隙问题
+			background: #fff;
+			z-index: 3;
 		}
-		img{
-			width: 100px;
-			height: 100px;
-			border-radius: 5px;
+		.scrollList{
+			flex: 1;
+			margin-left: 8px;
+			overflow: scroll;
+			margin-top: 30px;
+			.title{
+				display: flex;
+				height: 30px;
+				align-items: center;
+				.headline{
+					font-size: 15px;
+					font-weight: bold;
+				}
+				.describe{
+					margin-left: 8px;
+					font-size: 12px;
+				}
+			}
 		}
 		.box{
-			padding: 0 8px;
-			flex: 1;
+			border-radius: 10px;
 			display: flex;
-			flex-direction: column;
-			justify-content: space-between;
-			.scrollText{
-				font-size: 16px;
+			text-align: left;
+			margin-bottom: 5px;
+			&:last-child{
+				margin-right: 0;	
 			}
-			.scrollDescribe{
-				font-size: 11px;
-				color: #B1B1B1;
+			img{
+				width: 100px;
+				height: 100px;
+				border-radius: 5px;
 			}
-			.scrollSales{
-				font-size: 11px;
-				color: #B1B1B1;
-			}
-			.bottom{
+			.box{
+				padding: 0 8px;
+				flex: 1;
 				display: flex;
+				flex-direction: column;
 				justify-content: space-between;
-				.price{
-					.discount{
-						font-size: 16px;
-						color: #D9664E;
-						margin-right: 3px;
-					}
-					.original{
-						font-size: 11px;
-						color: #B1B1B1;
-						text-decoration: line-through;
-					}
+				.scrollText{
+					font-size: 16px;
 				}
-				.iconfont{
-					font-size: 18px;
-					color: #279AFF;
+				.scrollDescribe{
+					font-size: 11px;
+					color: #B1B1B1;
 				}
-				.account{
-					flex: 1;
+				.scrollSales{
+					font-size: 11px;
+					color: #B1B1B1;
+				}
+				.bottom{
 					display: flex;
 					justify-content: space-between;
-					padding-left: 5px;
-				}
-				.icon-add-fill{
-					position: relative;
-					.add{
-						display: none;
-						position: absolute;
-						right: 4px;
-						bottom: 5px;
-						width: 10px;
-						height: 10px;
-						border-radius: 50%;
-						background-color: #279AFF;
-						transition: all .4s cubic-bezier(0.49, -0.29, 0.75, 0.41);
+					.price{
+						.discount{
+							font-size: 16px;
+							color: #D9664E;
+							margin-right: 3px;
+						}
+						.original{
+							font-size: 11px;
+							color: #B1B1B1;
+							text-decoration: line-through;
+						}
 					}
-				}
+					.iconfont{
+						font-size: 18px;
+						color: #279AFF;
+					}
+					.account{
+						flex: 1;
+						display: flex;
+						justify-content: space-between;
+						padding-left: 5px;
+					}
+					.icon-add-fill{
+						position: relative;
+						.add{
+							display: none;
+							position: absolute;
+							right: 4px;
+							bottom: 5px;
+							width: 10px;
+							height: 10px;
+							border-radius: 50%;
+							background-color: #279AFF;
+							transition: all .4s cubic-bezier(0.49, -0.29, 0.75, 0.41);
+						}
+					}
+				}	
 			}	
 		}	
 	}
@@ -229,7 +267,7 @@
 				display: flex;
 				align-items: center;
 				justify-content: center;
-				flex-direction: rolumn;
+				flex-direction: column;
 				margin-left: 85px;
 				.topText{
 					font-size: 14px;
