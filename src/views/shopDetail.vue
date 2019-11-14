@@ -123,8 +123,8 @@ export default {
 		},
 		adsorb(){
 			let top = this.$refs.top.offsetTop;
-			console.log(document.getElementsByClassName("top"))
-			console.log(document.body.scrollTop)
+			// console.log(document.getElementsByClassName("top"))
+			// console.log(document.body.scrollTop)
 			// if(document.body.scrollTop>= top){
 			// 	this.adsorbValue = true;
 			// }else if(document.body.scrollTop <= top){
@@ -240,7 +240,7 @@ export default {
 		margin: 0 15px;
     }
 	/deep/ .van-sidebar-item--select{
-		border: none;
+		border-color: #1989FA;
 	} 
 
 }

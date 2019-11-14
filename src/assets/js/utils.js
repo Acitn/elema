@@ -1,11 +1,11 @@
-// let timeout = null
+let timeout = null
 
-//防抖   停止操作 等待wait时间再执行 
-// function debounce(fn, wait) { 
-// 	debugger
-//   if(timeout !== null) clearTimeout(timeout)
-//   timeout = setTimeout(fn, wait)
-// }
+// 防抖   停止操作 等待wait时间再执行 
+function debounce(fn, wait) { 
+	debugger
+  if(timeout !== null) clearTimeout(timeout)
+  timeout = setTimeout(fn, wait)
+}
 
 //节流 间隔delay时间再执行
 function throttle(fn, delay) { 
@@ -20,6 +20,6 @@ function throttle(fn, delay) {
   }       
 }  
    
-// export {debounce,throttle}
- export {throttle}
+export {debounce,throttle}
+ // export {throttle}
 // export default {debounce} //默认只能一个

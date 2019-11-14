@@ -3,16 +3,16 @@
 		<slot></slot>
 		<div class="slider-content">	
 			<van-sidebar v-model="activeKey">
-				<van-sidebar-item v-for="(list,i) in data" :key="i" :title="list.title"/>
+				<van-sidebar-item v-for="(list,i) in data" :key="i" :id="i" :title="list.title" :info="list.info" @click="scrollTo($event)" ref="siderBar"/>
 			</van-sidebar>
 			<!-- @scroll.passive -->
 			<div class="scrollList"  ref="scrollList" @scroll.passive="fnScroll">
-				<div class="scrollItem" v-for="(item,index) in data" :key="index" :id="index">
+				<div class="scrollItem2" v-for="(item,index) in data" :key="index" :id="index" ref="text">
 					<div :class="{fixed: activeKey == index}" class="title">
 						<div class="headline">{{item.title}}</div>
 						<div class="describe">{{item.describe}}</div>
 					</div>
-					<div class="box" v-for="(item2,index2) in item.items" :key="index2">
+					<div class="bigBox" v-for="(item2,index2) in item.items" :key="index2">
 						<img :src="item2.img_url" alt="">
 						<div class="box">
 							<span class="scrollText">{{item2.name}}</span>
@@ -24,9 +24,9 @@
 									<span class="original">&yen;{{item2.original}}</span>
 								</div>
 								<div :class="{account: item2.num>0 }">
-									<i class="iconfont icon-jianshao" v-show="item2.num>0"  @click="reduce(index, index2)"></i>
+									<i class="iconfont icon-jianshao" v-show="item2.num>0"  @click="reduce(index, index2)"  :parentId="index"></i>
 									<span class="number" v-show="item2.num>0">{{item2.num}}</span>
-									<i class="iconfont icon-add-fill" @click="add(index, index2, $event)"></i>
+									<i class="iconfont icon-add-fill" @click="add(index, index2, $event)" :parentId="index"></i>
 								</div>
 							</div>
 						</div>
@@ -86,36 +86,87 @@ import {throttle} from 'assets/js/utils'
 		data(){
 			return {
 				activeKey: 0,
+				instead:false,
 				fnScroll: () => {}
 			}
 		},
 		mounted(){
-			this.fnScroll = throttle(this.side, 1000)
+			this.fnScroll = throttle(this.side, 0)
 			// this.$refs.scrollList.addEventListener('scroll', throttle(this.side,1000))
 		},
 		methods:{
-			side(){
-				// var date=new Date();//获取系统时间
-				// var s=date.getSeconds();//获取秒
-				// console.log(s)
+			//点击左侧导航跳转到指定位置
+			scrollTo(e){
+				let scrollList = this.$refs.scrollList
+				const container = this.$refs.text,
+					  height = this.$refs.text["0"].offsetTop
+				// debugger
+				for(let item of container){
+					if(item.id == e){
+						if(scrollList.scrollHeight >= item.offsetTop + item.clientHeight){
+							if(this.instead){
+								scrollList.scrollTop = item.offsetTop - height
+								this.instead = false
+								
+							}else if(item.id != this.activeKey ){
+								//从后面往回按此时标题处于absoulute状态脱离文件流,计算高度忽略它
+								if(item.id <= this.activeKey){	
+									scrollList.scrollTop = item.offsetTop - height
+								}else{
+									scrollList.scrollTop = item.offsetTop
+								}
+							}
+						}
+						else{
+							this.instead = true
+							scrollList.scrollTop = item.offsetTop + (scrollList.scrollHeight - item.offsetTop - item.clientHeight)	
+						}
+						break
+					}
+				}
 			},
+			//商品列表滑动title滚动
+			side(){
+				const scrollTop = this.$refs.scrollList.scrollTop,
+					  container = this.$refs.text,
+					  height = this.$refs.text["0"].offsetTop
+				for(let item of container){
+					if(scrollTop > (item.offsetTop - height) && scrollTop < (item.offsetTop - height + item.offsetHeight)){
+						this.activeKey = item.id
+						break
+					}
+				}
+			},
+			//添加商品
 			add(index, index2, event){
+				//左侧导航栏数量添加
+				let children = event.currentTarget.attributes.parentId.nodeValue
+				for(let item of this.data){
+					if(item.id == children){
+						item.info ++
+						break
+					}
+				}
+				//商品列数量添加
 				this.data[index].items[index2].num++;
 				// 小球动画 
-				var top = event.srcElement.offsetTop, // 小球降落起点
-					left = event.srcElement.offsetLeft,
+				var top = event.pageY - event.currentTarget.offsetHeight, // 小球降落起点
+					top2 = event.currentTarget.offsetTop,
+					left = event.clientX - event.currentTarget.offsetWidth/2,
 					endTop = this.$refs.cart.offsetTop - event.clientY + this.$refs.cart.scrollHeight/2,  // 小球降落终点
 					endLeft = this.$refs.cart.offsetLeft + this.$refs.cart.scrollWidth/2; 
 				// // 小球到达起点
-				let outer = document.getElementById("points").getElementsByClassName("pointPre")[0];
-				outer.classList.remove("pointPre");
-				outer.setAttribute('style', `left: ${left}px; top: ${top}px`);
-				let inner = outer.getElementsByClassName("point-inner")[0];
+				console.log(event.currentTarget.getBoundingClientRect())
+				let outer = document.getElementById("points").getElementsByClassName("pointPre")[0]
+				outer.classList.remove("pointPre")
+				outer.setAttribute('style', `left: ${left}px; top: ${top}px`)
+				
+				let inner = outer.getElementsByClassName("point-inner")[0]
 				const _this = this
 				setTimeout(function() { 
 					// 将jquery对象转换为DOM对象
-					outer.style.webkitTransform = 'translate3d(0,' + endTop  + 'px,0)';
-					inner.style.webkitTransform = 'translate3d(' + (endLeft - left) + 'px,0,0)';			
+					outer.style.webkitTransform = 'translate3d(0,' + endTop  + 'px,0)'
+					inner.style.webkitTransform = 'translate3d(' + (endLeft - left) + 'px,0,0)'			
 					// 小球运动完毕恢复到原点
 					setTimeout(function() {
 						outer.removeAttribute("style")
@@ -124,8 +175,16 @@ import {throttle} from 'assets/js/utils'
 					}, 800);  //这里的延迟值和小球的运动时间相关
 				}, 1);
 			},
-			
+			//减少商品
 			reduce(index, index2){
+				//左侧导航栏数量减少
+				let children = event.currentTarget.attributes.parentId.nodeValue
+				for(let item of this.data){
+					if(item.id == children){
+						item.info --
+						break
+					}
+				}
 				if(this.data[index].items[index2].num > 0){
 					this.data[index].items[index2].num--;
 				}
@@ -155,92 +214,97 @@ import {throttle} from 'assets/js/utils'
 			margin-left: 8px;
 			overflow: scroll;
 			margin-top: 30px;
-			.title{
-				display: flex;
-				height: 30px;
-				align-items: center;
-				.headline{
-					font-size: 15px;
-					font-weight: bold;
+			.scrollItem2{
+				&:last-child{
+					padding-bottom: 100px;
 				}
-				.describe{
-					margin-left: 8px;
-					font-size: 12px;
-				}
-			}
-		}
-		.box{
-			border-radius: 10px;
-			display: flex;
-			text-align: left;
-			margin-bottom: 5px;
-			&:last-child{
-				margin-right: 0;	
-			}
-			img{
-				width: 100px;
-				height: 100px;
-				border-radius: 5px;
-			}
-			.box{
-				padding: 0 8px;
-				flex: 1;
-				display: flex;
-				flex-direction: column;
-				justify-content: space-between;
-				.scrollText{
-					font-size: 16px;
-				}
-				.scrollDescribe{
-					font-size: 11px;
-					color: #B1B1B1;
-				}
-				.scrollSales{
-					font-size: 11px;
-					color: #B1B1B1;
-				}
-				.bottom{
+				.title{
 					display: flex;
-					justify-content: space-between;
-					.price{
-						.discount{
-							font-size: 16px;
-							color: #D9664E;
-							margin-right: 3px;
-						}
-						.original{
-							font-size: 11px;
-							color: #B1B1B1;
-							text-decoration: line-through;
-						}
+					height: 30px;
+					align-items: center;
+					.headline{
+						font-size: 15px;
+						font-weight: bold;
 					}
-					.iconfont{
-						font-size: 18px;
-						color: #279AFF;
+					.describe{
+						margin-left: 8px;
+						font-size: 12px;
 					}
-					.account{
+				}
+				.bigBox{
+					border-radius: 10px;
+					display: flex;
+					text-align: left;
+					margin-bottom: 5px;
+					&:last-child{
+						margin-right: 0;	
+					}
+					img{
+						width: 100px;
+						height: 100px;
+						border-radius: 5px;
+					}
+					.box{
+						padding: 0 8px;
 						flex: 1;
 						display: flex;
+						flex-direction: column;
 						justify-content: space-between;
-						padding-left: 5px;
-					}
-					.icon-add-fill{
-						position: relative;
-						.add{
-							display: none;
-							position: absolute;
-							right: 4px;
-							bottom: 5px;
-							width: 10px;
-							height: 10px;
-							border-radius: 50%;
-							background-color: #279AFF;
-							transition: all .4s cubic-bezier(0.49, -0.29, 0.75, 0.41);
+						.scrollText{
+							font-size: 16px;
 						}
-					}
+						.scrollDescribe{
+							font-size: 11px;
+							color: #B1B1B1;
+						}
+						.scrollSales{
+							font-size: 11px;
+							color: #B1B1B1;
+						}
+						.bottom{
+							display: flex;
+							justify-content: space-between;
+							.price{
+								.discount{
+									font-size: 16px;
+									color: #D9664E;
+									margin-right: 3px;
+								}
+								.original{
+									font-size: 11px;
+									color: #B1B1B1;
+									text-decoration: line-through;
+								}
+							}
+							.iconfont{
+								font-size: 18px;
+								color: #279AFF;
+							}
+							.account{
+								flex: 1;
+								display: flex;
+								justify-content: space-between;
+								padding-left: 5px;
+							}
+							.icon-add-fill{
+								position: relative;
+								.add{
+									display: none;
+									position: absolute;
+									right: 4px;
+									bottom: 5px;
+									width: 10px;
+									height: 10px;
+									border-radius: 50%;
+									background-color: #279AFF;
+									transition: all .4s cubic-bezier(0.49, -0.29, 0.75, 0.41);
+								}
+							}
+						}	
+					}	
 				}	
-			}	
-		}	
+			}
+		}
 	}
 	.footBox{
 		position: fixed;
