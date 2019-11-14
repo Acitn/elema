@@ -59,7 +59,7 @@
 <script>
 import Tabs from 'components/shop/Tabs';
 import TabsPane from 'components/shop/TabsPane';
-import ScrollBar from 'components/shop/ScrollBar';
+import ScrollBar from 'components/shop/scrollBar';
 import listBox from 'components/shop/listBox';
 import * as API from 'api/demo';
 // import Mixins from '../mixins/index';

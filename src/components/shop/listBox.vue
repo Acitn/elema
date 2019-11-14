@@ -151,7 +151,6 @@ import {throttle} from 'assets/js/utils'
 				this.data[index].items[index2].num++;
 				// 小球动画 
 				var top = event.pageY - event.currentTarget.offsetHeight, // 小球降落起点
-					top2 = event.currentTarget.offsetTop,
 					left = event.clientX - event.currentTarget.offsetWidth/2,
 					endTop = this.$refs.cart.offsetTop - event.clientY + this.$refs.cart.scrollHeight/2,  // 小球降落终点
 					endLeft = this.$refs.cart.offsetLeft + this.$refs.cart.scrollWidth/2; 
