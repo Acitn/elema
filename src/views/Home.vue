@@ -42,7 +42,7 @@
       </van-grid>
 
     <section style="position: relative;">
-      <div style="font-size:24px;padding-left:15px;text-align:left;font-weight:blod;      background: #fff;">推荐商家</div>
+      <div class="headline">推荐商家</div>
       <div class="dropMenu">
         <div class="menuItem">
           <van-dropdown-menu style="padding:0 10px">
@@ -251,6 +251,13 @@ a {
   .van-swipe{
     margin: 0 15px;
     padding-top: 10px;
+  }
+  .headline{
+	  font-size:24px;
+	  padding-left:15px;
+	  text-align:left;
+	  font-weight:blod;
+	  background: #fff;
   }
   .dropMenu{
     display:flex;

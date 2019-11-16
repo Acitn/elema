@@ -90,13 +90,6 @@
       "unicode_decimal": 59011
     },
     {
-      "icon_id": "3522840",
-      "name": "客服",
-      "font_class": "pingjia-",
-      "unicode": "e8f5",
-      "unicode_decimal": 59637
-    },
-    {
       "icon_id": "5053482",
       "name": "筛选",
       "font_class": "shaixuan",
@@ -139,6 +132,13 @@
       "unicode_decimal": 58915
     },
     {
+      "icon_id": "7587956",
+      "name": "垃圾桶",
+      "font_class": "lajitong",
+      "unicode": "e615",
+      "unicode_decimal": 58901
+    },
+    {
       "icon_id": "7795436",
       "name": "右箭头",
       "font_class": "arrow-right",
@@ -179,6 +179,13 @@
       "font_class": "shangwu",
       "unicode": "e61e",
       "unicode_decimal": 58910
+    },
+    {
+      "icon_id": "8614178",
+      "name": "上箭头",
+      "font_class": "icon-shang",
+      "unicode": "e60a",
+      "unicode_decimal": 58890
     },
     {
       "icon_id": "8614854",

@@ -21,10 +21,10 @@
 							<div class="bottom">
 								<div class="price">
 									<span class="discount" >&yen;{{item2.price}}</span>
-									<span class="original">&yen;{{item2.original}}</span>
+									<span class="original" v-if="item2.original">&yen;{{item2.original}}</span>
 								</div>
 								<div :class="{account: item2.num>0 }">
-									<i class="iconfont icon-jianshao" v-show="item2.num>0"  @click="reduce(index, index2)"  :parentId="index"></i>
+									<i class="iconfont icon-jianshao" v-show="item2.num>0"  @click="reduce(index, index2,$event)" :parentId="index"></i>
 									<span class="number" v-show="item2.num>0">{{item2.num}}</span>
 									<i class="iconfont icon-add-fill" @click="add(index, index2, $event)" :parentId="index"></i>
 								</div>
@@ -59,16 +59,45 @@
                 <div class="point-inner"></div>
             </div>  
         </div>
+		//遮罩层与底部弹窗
+		<div class="shade"></div>
+		<div class="bottomUp">
+			<div class="headline">
+				<div class="left">已选商品</div>
+				<div class="right">
+					<i class="iconfont icon-lajitong"></i>
+					清空
+				</div>
+			</div>
+			
+			<div class="item" v-for="(item,id) in cart" :key="id">
+				<div class="shop">{{item.data.name}}</div>
+				<div class="right">
+					<div class="price">
+						<span class="discount" >&yen;{{item.data.price}}</span>
+					</div>
+					<div class="account">
+						<i class="iconfont icon-jianshao" @click="reduce(item.parentId, item.id,$event)" :parentId="item.parentId"></i>
+						<span class="number">{{item.data.num}}</span>
+						<i class="iconfont icon-add-fill" @click="add(item.parentId, item.id, $event)" :parentId="item.parentId"></i>
+					</div>
+				</div>
+			</div>
+		</div>
 		
 		<footer class="footBox">
-			<div class="left">
+			<div class="left" >
 				<div class="photo" ref="cart"></div>
 				<div class="text">
-					<div class="topText">未选购商品</div>
+					<div class="topText"  v-show="total == 0">未选购商品</div>
+					<div class="fill" v-show="total > 0">
+						<div class="total">&yen;{{total}}</div>
+						<div class="originalTotal" v-show="originalShow">&yen;{{originalTotal}}</div>
+					</div>
 					<div class="bottomText">另需配送费1.5元</div>
 				</div>
 			</div>
-			<div class="right">&yen;10元起送</div>
+			<div class="right" :class="{green:this.total >= this.sendingPrice}">{{cartContent}}</div>
 		</footer>
 	</div>
 </template>
@@ -81,20 +110,42 @@ import {throttle} from 'assets/js/utils'
 			data:{
 				type: Array,
 				required: true
+			},
+			sendingPrice:{
+				type: Number,
+				required: true
 			}
 		},
 		data(){
 			return {
 				activeKey: 0,
 				instead:false,
+				total:0,
+				originalTotal:0,
+				originalShow:false,
+				cartContent:"",
+				cart:[],
 				fnScroll: () => {}
 			}
 		},
 		mounted(){
 			this.fnScroll = throttle(this.side, 0)
-			// this.$refs.scrollList.addEventListener('scroll', throttle(this.side,1000))
+		},
+		updated(){
+			this.setCartContent()
 		},
 		methods:{
+			//动态改变购物车右下角内容
+			setCartContent(){
+				if(this.total == 0){
+					this.cartContent = `￥${this.sendingPrice}起送`
+				}else if(this.total < this.sendingPrice){
+					let price = this.sendingPrice - this.total;
+					this.cartContent = `还差￥${price}起送`
+				}else if(this.total >= this.sendingPrice){
+					this.cartContent = `去结算`
+				}
+			},
 			//点击左侧导航跳转到指定位置
 			scrollTo(e){
 				let scrollList = this.$refs.scrollList
@@ -140,22 +191,40 @@ import {throttle} from 'assets/js/utils'
 			//添加商品
 			add(index, index2, event){
 				//左侧导航栏数量添加
-				let children = event.currentTarget.attributes.parentId.nodeValue
+				let children = event.currentTarget.attributes.parentId.value
+				
 				for(let item of this.data){
 					if(item.id == children){
 						item.info ++
 						break
 					}
 				}
+				
 				//商品列数量添加
 				this.data[index].items[index2].num++;
+				this.total += this.data[index].items[index2].price;
+				this.setCartContent();
+				let select ={"parentId":index,"id":index2,"data":this.data[index].items[index2]};
+				if(this.data[index].items[index2].num <= 1){
+					this.cart.push(select)
+				}
+					
+				//购物车的原价和总价显示
+				if(this.data[index].items[index2].original > 0){
+					this.originalTotal += this.data[index].items[index2].original;
+					this.originalShow = true;
+				}else{
+					if(this.originalTotal == 0){
+						this.originalShow = false;
+					}
+					this.originalTotal += this.data[index].items[index2].price;		
+				}
 				// 小球动画 
 				var top = event.pageY - event.currentTarget.offsetHeight, // 小球降落起点
 					left = event.clientX - event.currentTarget.offsetWidth/2,
 					endTop = this.$refs.cart.offsetTop - event.clientY + this.$refs.cart.scrollHeight/2,  // 小球降落终点
 					endLeft = this.$refs.cart.offsetLeft + this.$refs.cart.scrollWidth/2; 
 				// // 小球到达起点
-				console.log(event.currentTarget.getBoundingClientRect())
 				let outer = document.getElementById("points").getElementsByClassName("pointPre")[0]
 				outer.classList.remove("pointPre")
 				outer.setAttribute('style', `left: ${left}px; top: ${top}px`)
@@ -175,7 +244,7 @@ import {throttle} from 'assets/js/utils'
 				}, 1);
 			},
 			//减少商品
-			reduce(index, index2){
+			reduce(index, index2,event){
 				//左侧导航栏数量减少
 				let children = event.currentTarget.attributes.parentId.nodeValue
 				for(let item of this.data){
@@ -186,9 +255,28 @@ import {throttle} from 'assets/js/utils'
 				}
 				if(this.data[index].items[index2].num > 0){
 					this.data[index].items[index2].num--;
+					this.total -= this.data[index].items[index2].price;
+					if(this.data[index].items[index2].original > 0){
+						this.originalTotal -= this.data[index].items[index2].original;
+					}else {
+						this.originalTotal -= this.data[index].items[index2].price;
+					}
+					if(this.originalTotal == this.total){
+						this.originalShow = false
+					}else{
+						this.originalShow = true
+					}
 				}
+				this.setCartContent();
 			}
-		}
+		},
+		// computed:{
+		// 	cart2:()=>{
+		// 		return this.cart.filter( (list) => {
+		// 			return list.data.num > 0
+		// 		})
+		// 	}
+		// }
 	}
 </script>
 
@@ -280,10 +368,12 @@ import {throttle} from 'assets/js/utils'
 								color: #279AFF;
 							}
 							.account{
-								flex: 1;
 								display: flex;
 								justify-content: space-between;
-								padding-left: 5px;
+								.number{
+									padding: 0 10px;
+									font-size: 16px;
+								}
 							}
 							.icon-add-fill{
 								position: relative;
@@ -305,12 +395,49 @@ import {throttle} from 'assets/js/utils'
 			}
 		}
 	}
+	.bottomUp{
+		position: fixed;
+		bottom: 55px;
+		left: 0;
+		display: flex;
+		flex-direction: column;
+		width: 100%;
+		
+		background: #F8F8F8;
+		.headline{
+			display: flex;
+			justify-content: space-between;
+			padding: 12px 10px;
+		}
+		.item{
+			background-color: #fff;
+			display: flex;
+			justify-content: space-between;
+			padding: 18px 10px;
+			font-size: 16px;
+			.right{
+				display: flex;
+				.price{
+					color: #FF563C;
+				}
+				.account{
+					padding: 0 8px;
+				}
+				.number{
+					padding: 0 5px;
+				}
+				.iconfont{
+					color: #2396FF;
+				}
+			}
+		}
+	}
 	.footBox{
 		position: fixed;
 		bottom: 0;
 		left: 0;
 		width: 100%;
-		height: 50px;
+		height: 55px;
 		display: flex;
 		justify-content: space-between;
 		z-index: 9;
@@ -318,34 +445,53 @@ import {throttle} from 'assets/js/utils'
 			background-color: #414143;
 			color: #A8A7A7;
 			flex: 1;
+			display: flex;
 			.photo{
-				width: 40px;
-				height: 40px;
+				width: 50px;
+				height: 50px;
 				background: red;
 				position: fixed;
-				bottom: 15px;
-				left: 30px;
+				bottom: 10px;
+				left: 20px;
 			}
 			.text{
 				display: flex;
-				align-items: center;
+				align-items: flex-start;
 				justify-content: center;
 				flex-direction: column;
 				margin-left: 85px;
+				height: 100%;
 				.topText{
 					font-size: 14px;
 				}
+				.fill{
+					display: flex;
+					align-items: baseline;
+					.total{
+						font-size: 20px;
+						color: #fff;
+						padding-left: 3px;
+					}
+					.originalTotal{
+						font-size: 12px;
+						text-decoration: line-through;
+					}
+				}
 				.bottomText{
-					font-size: 12px;
+					font-size: 10px;
 				}
 			}
 		}
 		.right{
 			background-color: #535356;
 			color: #A9A9AB;
-			padding: 0 18px;
+			width: 110px;
 			font-size: 16px;
-			line-height: 50px;
+			line-height: 55px;
+		}
+		.green{
+			background-color: #58D178;
+			color: #fff;
 		}
 	}
 	/* 运动小球 */

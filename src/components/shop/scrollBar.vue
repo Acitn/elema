@@ -12,10 +12,10 @@
 							<div class="bottom">
 								<div class="price">
 									<span class="discount" >&yen;{{item2.price}}</span>
-									<span class="original">&yen;{{item2.original}}</span>
+									<span class="original"  v-if="item2.original">&yen;{{item2.original}}</span>
 								</div>
 								<div :class="{account: item2.num>0 }">
-									<i class="iconfont icon-jianshao" v-show="item2.num > 0" @click="childReduce(index, index2)"  :parentId="index"></i>
+									<i class="iconfont icon-jianshao" v-show="item2.num > 0" @click="childReduce(index, index2,$event)"  :parentId="index"></i>
 									<span class="number" v-show="item2.num > 0">{{item2.num}}</span>
 									<i class="iconfont icon-add-fill" @click="chlidAdd(index,index2,$event)"  :parentId="index"></i>
 								</div>
@@ -43,8 +43,8 @@ export default{
 		chlidAdd(index,index2,$event){
 			this.$parent.add(index,index2,$event)
 		},
-		childReduce(index, index2){
-			this.$parent.reduce(index,index2)
+		childReduce(index, index2,event){
+			this.$parent.reduce(index,index2,event)
 		}
 	}	
 }

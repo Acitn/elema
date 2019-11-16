@@ -9,7 +9,7 @@ import './api/axios';
 // import VueSource from 'vue-resource';
 // Vue.use(VueSource)
 import rem from './rem';
-// import 'css/base/base.scss';
+import 'css/base/base.scss';
 import './assets/iconfont/iconfont.css';
 
 // import mixins from './mixins';

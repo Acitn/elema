@@ -44,8 +44,8 @@
                 <TabsPane title="点餐" >
                     <div class="content">
                         <div class="ad"></div>
-						<listBox :data="scrollItem2">
-							<ScrollBar title="商家推荐" :data="scrollItem2"></ScrollBar>
+						<listBox :data="scrollItem" :sendingPrice="sendingPrice">
+							<ScrollBar title="商家推荐" :data="scrollItem"></ScrollBar>
 						</listBox>
                     </div>
                 </TabsPane>
@@ -57,8 +57,8 @@
 </template>
 
 <script>
-import Tabs from 'components/shop/Tabs';
-import TabsPane from 'components/shop/TabsPane';
+import Tabs from 'components/tab/Tabs';
+import TabsPane from 'components/tab/TabsPane';
 import ScrollBar from 'components/shop/scrollBar';
 import listBox from 'components/shop/listBox';
 import * as API from 'api/demo';
@@ -79,14 +79,13 @@ export default {
             active:0,
 			activeKey: 0,
 			scrollItem:[],
-			scrollItem2:[],
+			sendingPrice:0,
             list:[{text:"点餐"},{text:"评价",count:"3899"},{text:"商家",label:"有故事"}],
 			sliderList:[{title:"热销",info:"2"},{title:"优惠",info:""},{title:"新品上市",info:""},{title:"套餐组合",info:""},{title:"热卖主食",info:""},{title:"小食精选",info:""}]
         }
     },
     created() {
 		this.getScrollItem()
-		this.getScrollItem2()
         this.$store.commit('setShow', false)
     },
 	mounted(){
@@ -108,16 +107,10 @@ export default {
             this.$router.go(-1)
         },
 		getScrollItem(){
-			API.post("/scrollItem").then(result => {
-			  if(result.code === 200){
-				  this.scrollItem = result.data;
-			  }
-			})
-		},
-		getScrollItem2(){
 			API.post("/scrollItem2").then(result => {
 			  if(result.code === 200){
-				  this.scrollItem2 = result.data;
+				  this.scrollItem = result.data;
+				  this.sendingPrice = result.sendingPrice;
 			  }
 			})
 		},
