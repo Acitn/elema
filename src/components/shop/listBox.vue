@@ -1,6 +1,6 @@
 <template>
 	<div style="flex: 1;">
-		<slot></slot>
+		<ScrollBar title="商家推荐" :data="data"></ScrollBar>
 		<div class="slider-content">	
 			<van-sidebar v-model="activeKey">
 				<van-sidebar-item v-for="(list,i) in data" :key="i" :id="i" :title="list.title" :info="list.info" @click="scrollTo($event)" ref="siderBar"/>
@@ -60,21 +60,21 @@
             </div>  
         </div>
 		//遮罩层与底部弹窗
-		<div class="shade"></div>
-		<div class="bottomUp">
+		<div class="shade" v-show="bottomShow" @click="bottomUpShow(false)"></div>
+		<div class="bottomUp" v-show="bottomShow">
 			<div class="headline">
 				<div class="left">已选商品</div>
-				<div class="right">
+				<div class="right" @click="clear()">
 					<i class="iconfont icon-lajitong"></i>
 					清空
 				</div>
 			</div>
-			
+				
 			<div class="item" v-for="(item,id) in cart" :key="id">
 				<div class="shop">{{item.data.name}}</div>
 				<div class="right">
 					<div class="price">
-						<span class="discount" >&yen;{{item.data.price}}</span>
+						<span class="discount" >&yen;{{item.data.num * item.data.price}}</span>
 					</div>
 					<div class="account">
 						<i class="iconfont icon-jianshao" @click="reduce(item.parentId, item.id,$event)" :parentId="item.parentId"></i>
@@ -86,7 +86,7 @@
 		</div>
 		
 		<footer class="footBox">
-			<div class="left" >
+			<div class="left"  @click="bottomUpShow(!bottomShow)">
 				<div class="photo" ref="cart"></div>
 				<div class="text">
 					<div class="topText"  v-show="total == 0">未选购商品</div>
@@ -97,15 +97,19 @@
 					<div class="bottomText">另需配送费1.5元</div>
 				</div>
 			</div>
-			<div class="right" :class="{green:this.total >= this.sendingPrice}">{{cartContent}}</div>
+			<div class="right" :class="{green: cartContent == '去结算' }">{{cartContent}}</div>
 		</footer>
 	</div>
 </template>
 
 <script>
 import {throttle} from 'assets/js/utils'
+import ScrollBar from './ScrollBar';
 	export default{
 		name:"listBox",
+		components:{ 
+			ScrollBar
+		},
 		props: {
 			data:{
 				type: Array,
@@ -120,38 +124,27 @@ import {throttle} from 'assets/js/utils'
 			return {
 				activeKey: 0,
 				instead:false,
+				cart:[],
+				bottomShow:false,
 				total:0,
 				originalTotal:0,
 				originalShow:false,
 				cartContent:"",
-				cart:[],
 				fnScroll: () => {}
 			}
 		},
 		mounted(){
 			this.fnScroll = throttle(this.side, 0)
 		},
-		updated(){
-			this.setCartContent()
+		updated(){	
+			this.setCartContent();
 		},
 		methods:{
-			//动态改变购物车右下角内容
-			setCartContent(){
-				if(this.total == 0){
-					this.cartContent = `￥${this.sendingPrice}起送`
-				}else if(this.total < this.sendingPrice){
-					let price = this.sendingPrice - this.total;
-					this.cartContent = `还差￥${price}起送`
-				}else if(this.total >= this.sendingPrice){
-					this.cartContent = `去结算`
-				}
-			},
 			//点击左侧导航跳转到指定位置
 			scrollTo(e){
 				let scrollList = this.$refs.scrollList
 				const container = this.$refs.text,
 					  height = this.$refs.text["0"].offsetTop
-				// debugger
 				for(let item of container){
 					if(item.id == e){
 						if(scrollList.scrollHeight >= item.offsetTop + item.clientHeight){
@@ -188,6 +181,17 @@ import {throttle} from 'assets/js/utils'
 					}
 				}
 			},
+			//动态改变购物车右下角内容
+			setCartContent(){
+				if(this.total == 0){
+					this.cartContent = `￥${this.sendingPrice}起送`
+				}else if(this.total < this.sendingPrice){
+					let price = this.sendingPrice - this.total;
+					this.cartContent = `还差￥${price}起送`
+				}else if(this.total >= this.sendingPrice){
+					this.cartContent = '去结算'
+				}
+			},
 			//添加商品
 			add(index, index2, event){
 				//左侧导航栏数量添加
@@ -204,11 +208,11 @@ import {throttle} from 'assets/js/utils'
 				this.data[index].items[index2].num++;
 				this.total += this.data[index].items[index2].price;
 				this.setCartContent();
+				
 				let select ={"parentId":index,"id":index2,"data":this.data[index].items[index2]};
 				if(this.data[index].items[index2].num <= 1){
 					this.cart.push(select)
 				}
-					
 				//购物车的原价和总价显示
 				if(this.data[index].items[index2].original > 0){
 					this.originalTotal += this.data[index].items[index2].original;
@@ -250,40 +254,68 @@ import {throttle} from 'assets/js/utils'
 				for(let item of this.data){
 					if(item.id == children){
 						item.info --
+						if(item.info == 0){
+							item.info = ""
+						}
 						break
 					}
 				}
 				if(this.data[index].items[index2].num > 0){
 					this.data[index].items[index2].num--;
 					this.total -= this.data[index].items[index2].price;
+					//计算数量变为0时去掉cart的数据
+					// if(this.data[index].items[index2].num == 0){
+						this.cart = this.cart.filter((list)=>{
+							if(list.data.num > 0){
+								return list
+							}
+						})
+					// }
+					//计算原价
 					if(this.data[index].items[index2].original > 0){
 						this.originalTotal -= this.data[index].items[index2].original;
 					}else {
 						this.originalTotal -= this.data[index].items[index2].price;
 					}
+					//是否有打折
 					if(this.originalTotal == this.total){
 						this.originalShow = false
 					}else{
 						this.originalShow = true
 					}
 				}
+				if(this.cart == ""){
+					this.bottomShow = false
+				}
 				this.setCartContent();
+			},
+			//购物车顶部弹窗
+			bottomUpShow(val){
+				if(this.cart != ""){
+					this.bottomShow = val;
+				}			
+			},
+			//清空
+			clear(){
+				for(let item of this.cart){
+					item.data.num = 0
+				}
+				for(let item2 of this.data){
+					item2.info = ""
+				}
+				this.cart = []
+				this.total = 0,
+				this.originalTotal = 0,
+				this.bottomShow = false
 			}
 		},
-		// computed:{
-		// 	cart2:()=>{
-		// 		return this.cart.filter( (list) => {
-		// 			return list.data.num > 0
-		// 		})
-		// 	}
-		// }
 	}
 </script>
 
 <style lang="scss" scoped>
 	.slider-content{
 		display: flex;
-		height: calc(100vh - 50px); ;
+		height: calc(100vh - 55px); ;
 		overflow: scroll;
 		margin-top: 20px;
 		margin-bottom: 50px;
@@ -395,6 +427,77 @@ import {throttle} from 'assets/js/utils'
 			}
 		}
 	}
+	.footBox{
+		position: fixed;
+		bottom: 0;
+		left: 0;
+		width: 100%;
+		height: 55px;
+		display: flex;
+		justify-content: space-between;
+		z-index: 9;
+		.left{
+			background-color: #414143;
+			color: #A8A7A7;
+			flex: 1;
+			display: flex;
+			.photo{
+				width: 50px;
+				height: 50px;
+				background: red;
+				position: fixed;
+				bottom: 10px;
+				left: 20px;
+			}
+			.text{
+				display: flex;
+				align-items: flex-start;
+				justify-content: center;
+				flex-direction: column;
+				margin-left: 85px;
+				height: 100%;
+				.topText{
+					font-size: 14px;
+				}
+				.fill{
+					display: flex;
+					align-items: baseline;
+					.total{
+						font-size: 20px;
+						color: #fff;
+						padding-left: 3px;
+					}
+					.originalTotal{
+						font-size: 12px;
+						text-decoration: line-through;
+					}
+				}
+				.bottomText{
+					font-size: 10px;
+				}
+			}
+		}
+		.right{
+			background-color: #535356;
+			color: #A9A9AB;
+			width: 110px;
+			font-size: 16px;
+			line-height: 55px;
+		}
+		.green{
+			background-color: #58D178;
+			color: #fff;
+		}
+	}
+	.shade{
+		width: 100%;
+		height: 100vh;
+		background-color: rgba(0,0,0,0.5);
+		position: fixed;
+		top: 0;
+		left: 0;
+		z-index: 3;
+	}
 	.bottomUp{
 		position: fixed;
 		bottom: 55px;
@@ -402,8 +505,10 @@ import {throttle} from 'assets/js/utils'
 		display: flex;
 		flex-direction: column;
 		width: 100%;
-		
+		max-height: 440px;
+		overflow: auto;
 		background: #F8F8F8;
+		z-index: 4;
 		.headline{
 			display: flex;
 			justify-content: space-between;

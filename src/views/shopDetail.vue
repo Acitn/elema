@@ -40,13 +40,11 @@
             </div>
         </header>
         <main>
-            <Tabs :active = "active" >
+            <Tabs :active = "active">
                 <TabsPane title="点餐" >
                     <div class="content">
                         <div class="ad"></div>
-						<listBox :data="scrollItem" :sendingPrice="sendingPrice">
-							<ScrollBar title="商家推荐" :data="scrollItem"></ScrollBar>
-						</listBox>
+						<ListBox :data="scrollItem" :sendingPrice="sendingPrice"></ListBox>
                     </div>
                 </TabsPane>
                 <TabsPane title="评价" count="3899">内容二</TabsPane>
@@ -59,8 +57,7 @@
 <script>
 import Tabs from 'components/tab/Tabs';
 import TabsPane from 'components/tab/TabsPane';
-import ScrollBar from 'components/shop/scrollBar';
-import listBox from 'components/shop/listBox';
+import ListBox from 'components/shop/ListBox';
 import * as API from 'api/demo';
 // import Mixins from '../mixins/index';
 import {throttle} from 'assets/js/utils'
@@ -69,8 +66,7 @@ export default {
     components:{
         Tabs,
         TabsPane,
-		ScrollBar,
-		listBox
+		ListBox
     },
     data(){
         return {

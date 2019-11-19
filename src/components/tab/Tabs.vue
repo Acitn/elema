@@ -15,7 +15,7 @@
 
 <script>
 export default {
-    name:"Tabs.",
+    name:"Tabs",
     props: {
 		//选中标签
 		active: {
