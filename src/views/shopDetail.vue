@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div style="height: 100vh;">
         <header class="top" @scroll.passive="fnScroll" ref="top">
 			<div class="topMain" v-show="!adsorbValue">
 				<div class="toolbar">
@@ -22,7 +22,7 @@
 				<i class="iconfont icon-pin"></i>
 			</div>
             <div class="textBox">
-                <div class="title">华莱士炸鸡汉堡(茂名双山店)</div>
+                <div class="title">华莱士炸鸡汉堡(双山店)</div>
                 <div class="info">
                     <span>评价4.6</span>
                     <span>月售1713</span>
@@ -39,42 +39,51 @@
                 <div class="bottomText">公告：(一)您的满意好评是我们和骑手小哥的服务目标，如有</div>
             </div>
         </header>
-        <main>
-            <Tabs :active = "active">
-                <TabsPane title="点餐" >
-                    <div class="content">
-                        <div class="ad"></div>
-						<ListBox :data="scrollItem" :sendingPrice="sendingPrice"></ListBox>
-                    </div>
-                </TabsPane>
-                <TabsPane title="评价" count="3899">内容二</TabsPane>
-                <TabsPane title="商家" text="有故事">内容三</TabsPane>
-            </Tabs>
-        </main>
+        <Tabs :active = "active">
+            <TabsPane title="点餐" >
+                <div class="content">
+                    <div class="ad"></div>
+					<ListBox :data="scrollItem" :sendingPrice="sendingPrice"></ListBox>
+                </div>
+            </TabsPane>
+            <TabsPane title="评价" count="3899">
+				<Card :data="card"></Card>
+				<Comment :commentList="commentList"></Comment>
+			</TabsPane>
+            <TabsPane title="商家" text="有故事">内容三</TabsPane>
+        </Tabs>
     </div>
 </template>
 
 <script>
 import Tabs from 'components/tab/Tabs';
 import TabsPane from 'components/tab/TabsPane';
+//商品列表
 import ListBox from 'components/shop/ListBox';
+//评论
+import Comment from 'components/comment/Comment';
+import Card from 'components/comment/Card';
+
 import * as API from 'api/demo';
-// import Mixins from '../mixins/index';
 import {throttle} from 'assets/js/utils'
 export default {
 	// mixins:[Mixins],
     components:{
         Tabs,
         TabsPane,
-		ListBox
+		ListBox,
+		Comment,
+		Card
     },
     data(){
         return {
 			fnScroll: () => {},
-			adsorbValue:false,
-            active:0,
+			adsorbValue:true,
+            active: 0,
 			activeKey: 0,
 			scrollItem:[],
+			commentList:[],
+			card:{},
 			sendingPrice:0,
             list:[{text:"点餐"},{text:"评价",count:"3899"},{text:"商家",label:"有故事"}],
 			sliderList:[{title:"热销",info:"2"},{title:"优惠",info:""},{title:"新品上市",info:""},{title:"套餐组合",info:""},{title:"热卖主食",info:""},{title:"小食精选",info:""}]
@@ -82,22 +91,19 @@ export default {
     },
     created() {
 		this.getScrollItem()
+		this.getComment()
+		this.getCard()
         this.$store.commit('setShow', false)
     },
-	mounted(){
-		// 这种写法是错误的,下面写法只能在刚加载执行一次,应为this.absorb,要传参只能在方法里添加
-		// window.removeEventListener("scroll",this.adsorb(60))
-		// window.addEventListener('scroll', this.adsorb)
-		// throttle(this.adsorb(),1000);
-		
-		//这种方法不适用于节流返回的匿名函数，这样关闭时删除不了这个监听
-		// window.addEventListener('scroll', throttle(this.adsorb,1000))
-		this.fnScroll = throttle(this.adsorb, 1000)
-		window.addEventListener('scroll', this.fnScroll)
-	},
-	destroyed(){
-		window.removeEventListener('scroll', this.fnScroll)
-	},
+	// mounted(){		
+	// 	//这种方法不适用于节流返回的匿名函数，这样换页面时删除不了这个监听
+	// 	// window.addEventListener('scroll', throttle(this.adsorb,1000))
+	// 	this.fnScroll = throttle(this.adsorb, 0)
+	// 	window.addEventListener('scroll', this.fnScroll)
+	// },
+	// destroyed(){
+	// 	window.removeEventListener('scroll', this.fnScroll)
+	// },
     methods:{
         back(){
             this.$router.go(-1)
@@ -110,15 +116,19 @@ export default {
 			  }
 			})
 		},
-		adsorb(){
-			let top = this.$refs.top.offsetTop;
-			// console.log(document.getElementsByClassName("top"))
-			// console.log(document.body.scrollTop)
-			// if(document.body.scrollTop>= top){
-			// 	this.adsorbValue = true;
-			// }else if(document.body.scrollTop <= top){
-			// 	this.adsorbValue = false;
-			// }
+		getComment(){
+			API.post("/commentList").then(result => {
+			  if(result.code === 200){
+				  this.commentList = result.data;
+			  }
+			})
+		},
+		getCard(){
+			API.post("/card").then(result => {
+			  if(result.code === 200){
+				  this.card = result.data;
+			  }
+			})
 		}
 	}
  }
@@ -173,14 +183,14 @@ export default {
         display: flex;
         justify-content: center;
         align-items: center;
-          color: #D64C6C;
+         color: #D64C6C;
     }
     .icon-shoucang{
         color: #D64C6C;
         font-size: 20px;
     }
     .textBox{
-        padding-top: 50px;
+        padding-top: 60px;
         .title{
             font-size: 20px;
             font-weight: bold;
@@ -221,6 +231,7 @@ export default {
     }
 }
 .content{
+	background: #fff;
     .ad{
         height: 100px;
         background: url("../assets/images/ad.jpg") no-repeat;
@@ -251,6 +262,7 @@ export default {
 	width: 100%;
 	z-index: 9;
 	box-sizing: border-box;
+	height: .6rem;
 	.van-search__content--round{
 		background-color: #E6E6E6;
 	}

@@ -21,6 +21,7 @@ const routes = [
     {path:'/shopDetail', component:load('shopDetail')},
     {path: '/about',component:load('about')},
     {path: '/personal',component:load('personal')},
+    {path:'/Settlement', component:load('Settlement')},
 
 ];
 export default routes;

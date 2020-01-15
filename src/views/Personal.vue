@@ -119,7 +119,7 @@ export default {
                 margin-bottom: 13px
             }
             .signIn{
-                width: 120px;
+                width: 140px;
                 font-size: 12px;
                 border: 1px solid #CBCBCB;
 				text-align: center;

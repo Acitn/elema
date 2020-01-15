@@ -29,6 +29,7 @@ module.exports = {
             }
         }
     },
+	// publicPath: './',
 	lintOnSave: true,
 	css: {
 		loaderOptions: {

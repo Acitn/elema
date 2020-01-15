@@ -1,10 +1,10 @@
 <template>
     <div class="tab-wrapper">
-        <div class="tab_header">
+        <div class="tab_header" ref="tabs">
             <div class="header_item" ref="element" v-for="(item,i) in navList" :key="i" @click="activeTab(i)">
                 <span class="header_text">{{item.title}}</span>
-                <!-- <span class="count" v-if="item.count">{{item.count}}</span>
-                <span class="label" v-if="item.text">{{item.text}}</span> -->
+                <span class="count" v-if="item.count">{{item.count}}</span>
+                <span class="label" v-if="item.text">{{item.text}}</span>
             </div>
             <div class="bottom"></div>
         </div>
@@ -14,6 +14,7 @@
 </template>
 
 <script>
+import {throttle} from 'assets/js/utils'
 export default {
     name:"Tabs",
     props: {
@@ -32,6 +33,15 @@ export default {
     updated (){
         this.activeTab(this.active);
     },
+	mounted(){
+		//这种方法不适用于节流返回的匿名函数，这样换页面时删除不了这个监听
+		// window.addEventListener('scroll', throttle(this.adsorb,1000))
+		this.fnScroll = throttle(this.adsorb, 0)
+		window.addEventListener('scroll', this.fnScroll)
+	},
+	destroyed(){
+		window.removeEventListener('scroll', this.fnScroll)
+	},
     methods:{
         //获取pane
         getTabs () {
@@ -77,7 +87,17 @@ export default {
                 translateX = offsetLeft - 5 +"px",   
                 bottomWidth = width + 10;
 	    	this.$el.querySelector('.bottom').style = "width:"+bottomWidth+"px;transform: translateX("+translateX+");"
-        }
+        },
+		adsorb(){
+			// let tabs = this.$refs.tabs.$el;
+			// 这里fixedHeaderRoot是吸顶元素的ID
+			let tabs = document.getElementsByClassName("tab_header")["0"];
+			let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
+			// 这里要得到top的距离和元素自身的高度
+			let offsetTop = tabs.offsetTop;
+			let offsetHeight = tabs.offsetHeight;
+			this.headerFixed = scrollTop > (offsetTop - offsetHeight * 2);
+		}
     }
 }
 </script>
@@ -86,9 +106,11 @@ export default {
     .tab-wrapper{
         background-color: #fff;
         .tab_header{
+			position: relative;
             display: flex;
-            position: relative;
+			background: #fff;
             border-bottom: 1px solid #F2F2F1;
+			height: 35px;
             .header_item{
                 flex: 1;
                 line-height: 35px;
@@ -119,4 +141,10 @@ export default {
             }
         }
     }
+	
+	.fixed{
+		position :fixed;
+		top: 60px;
+		z-index: 9;
+	}
 </style>

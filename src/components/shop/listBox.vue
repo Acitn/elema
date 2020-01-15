@@ -36,50 +36,57 @@
 		</div>
 		
         <!-- 运动的小球 -->
-        <div id="points">
+        <!-- <div id="points" v-for="(num,i) in 7" :key="i">
             <div class="pointOuter pointPre">
                 <div class="point-inner"></div>
-            </div>  
-            <div class="pointOuter pointPre">
-                <div class="point-inner"></div>
-            </div>  
-            <div class="pointOuter pointPre">
-                <div class="point-inner"></div>
-            </div>  
-            <div class="pointOuter pointPre">
-                <div class="point-inner"></div>
-            </div>  
-            <div class="pointOuter pointPre">
-                <div class="point-inner"></div>
-            </div>  
-            <div class="pointOuter pointPre">
-                <div class="point-inner"></div>
-            </div>  
-            <div class="pointOuter pointPre">
-                <div class="point-inner"></div>
-            </div>  
-        </div>
+            </div>   
+        </div> -->
+		<div id="points">
+			<div class="pointOuter pointPre">
+				<div class="point-inner"></div>
+			</div>  
+			<div class="pointOuter pointPre">
+				<div class="point-inner"></div>
+			</div>  
+			<div class="pointOuter pointPre">
+				<div class="point-inner"></div>
+			</div>  
+			<div class="pointOuter pointPre">
+				<div class="point-inner"></div>
+			</div>  
+			<div class="pointOuter pointPre">
+				<div class="point-inner"></div>
+			</div>  
+			<div class="pointOuter pointPre">
+				<div class="point-inner"></div>
+			</div>  
+			<div class="pointOuter pointPre">
+				<div class="point-inner"></div>
+			</div>  
+		</div>
 		//遮罩层与底部弹窗
 		<div class="shade" v-show="bottomShow" @click="bottomUpShow(false)"></div>
-		<div class="bottomUp" v-show="bottomShow">
-			<div class="headline">
-				<div class="left">已选商品</div>
-				<div class="right" @click="clear()">
-					<i class="iconfont icon-lajitong"></i>
-					清空
-				</div>
-			</div>
-				
-			<div class="item" v-for="(item,id) in cart" :key="id">
-				<div class="shop">{{item.data.name}}</div>
-				<div class="right">
-					<div class="price">
-						<span class="discount" >&yen;{{item.data.num * item.data.price}}</span>
+		<div class="shopBox" :style="{height:boxHeight +'px'}">
+			<div class="bottomUp" ref="bottomUp">
+				<div class="headline">
+					<div class="left">已选商品</div>
+					<div class="right" @click="clear()">
+						<i class="iconfont icon-lajitong"></i>
+						清空
 					</div>
-					<div class="account">
-						<i class="iconfont icon-jianshao" @click="reduce(item.parentId, item.id,$event)" :parentId="item.parentId"></i>
-						<span class="number">{{item.data.num}}</span>
-						<i class="iconfont icon-add-fill" @click="add(item.parentId, item.id, $event)" :parentId="item.parentId"></i>
+				</div>
+					
+				<div class="item" v-for="(item,id) in cart" :key="id">
+					<div class="shop">{{item.data.name}}</div>
+					<div class="right">
+						<div class="price">
+							<span class="discount" >&yen;{{item.data.num * item.data.price}}</span>
+						</div>
+						<div class="account">
+							<i class="iconfont icon-jianshao" @click="reduce(item.parentId, item.id,$event)" :parentId="item.parentId"></i>
+							<span class="number">{{item.data.num}}</span>
+							<i class="iconfont icon-add-fill" @click="add(item.parentId, item.id, $event)" :parentId="item.parentId"></i>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -97,7 +104,7 @@
 					<div class="bottomText">另需配送费1.5元</div>
 				</div>
 			</div>
-			<div class="right" :class="{green: cartContent == '去结算' }">{{cartContent}}</div>
+			<div class="right" :class="{green: cartContent == '去结算' }" @click="account" >{{cartContent}}</div>
 		</footer>
 	</div>
 </template>
@@ -130,6 +137,7 @@ import ScrollBar from './ScrollBar';
 				originalTotal:0,
 				originalShow:false,
 				cartContent:"",
+				boxHeight: 0,
 				fnScroll: () => {}
 			}
 		},
@@ -169,8 +177,9 @@ import ScrollBar from './ScrollBar';
 					}
 				}
 			},
-			//商品列表滑动title滚动
+			
 			side(){
+				//商品列表滑动title滚动
 				const scrollTop = this.$refs.scrollList.scrollTop,
 					  container = this.$refs.text,
 					  height = this.$refs.text["0"].offsetTop
@@ -292,6 +301,11 @@ import ScrollBar from './ScrollBar';
 			//购物车顶部弹窗
 			bottomUpShow(val){
 				if(this.cart != ""){
+					if(val) {
+						this.boxHeight = this.$refs.bottomUp.offsetHeight
+					}else {
+						this.boxHeight = 0
+					}
 					this.bottomShow = val;
 				}			
 			},
@@ -307,6 +321,10 @@ import ScrollBar from './ScrollBar';
 				this.total = 0,
 				this.originalTotal = 0,
 				this.bottomShow = false
+			},
+			
+			account() {
+				this.$router.push('/Settlement')
 			}
 		},
 	}
@@ -315,15 +333,13 @@ import ScrollBar from './ScrollBar';
 <style lang="scss" scoped>
 	.slider-content{
 		display: flex;
-		height: calc(100vh - 55px); ;
+		height: calc(100vh - 110px); ;
 		overflow: scroll;
 		margin-top: 20px;
-		margin-bottom: 50px;
 		position: relative;
 		.fixed{
 			position: absolute;
 			top: 0;
-			width:100%;
 			box-shadow: 0 -1px #fff; //解决移动端计算错误留有1px空隙问题
 			background: #fff;
 			z-index: 3;
@@ -498,17 +514,20 @@ import ScrollBar from './ScrollBar';
 		left: 0;
 		z-index: 3;
 	}
-	.bottomUp{
+	.shopBox {
 		position: fixed;
 		bottom: 55px;
 		left: 0;
+		z-index: 4;
+		width: 100%;
+		transition: all .8s ease-out;
+		max-height: 440px;
+	}
+	.bottomUp {
 		display: flex;
 		flex-direction: column;
-		width: 100%;
-		max-height: 440px;
 		overflow: auto;
 		background: #F8F8F8;
-		z-index: 4;
 		.headline{
 			display: flex;
 			justify-content: space-between;

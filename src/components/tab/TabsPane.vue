@@ -49,5 +49,6 @@ export default {
 .tab_content{
     margin: 15px 0;
 	margin-bottom: 0;
+	background: #F5F5F5;
 }
 </style>
